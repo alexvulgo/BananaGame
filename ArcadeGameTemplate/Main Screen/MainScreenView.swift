@@ -27,8 +27,8 @@ struct MainScreenView: View {
     
     var body: some View {
         VStack(alignment: .center, spacing: 16.0) {
-            Spacer()
             
+            Spacer()
             /**
              * # PRO TIP!
              * The game title can be customized to represent the visual identity of the game
@@ -36,9 +36,9 @@ struct MainScreenView: View {
             Text("\(self.gameTitle)")
                 .font(.title)
                 .fontWeight(.bold)
-                .foregroundStyle(Color(UIColor.systemYellow))
+                .foregroundStyle(Color(UIColor.black))
             
-            Spacer()
+            
             
             /**
              * Customize the appearance of the **Insert a Coin** button to match the visual identity of your game
@@ -54,7 +54,21 @@ struct MainScreenView: View {
             .background(Color(UIColor.systemYellow))
             .cornerRadius(10.0)
             
-        }
+            
+            
+            Button {
+                withAnimation { self.startGame() }
+            } label: {
+                Text("Credits")
+                    .padding()
+                    .frame(maxWidth: 300)
+            }
+            .foregroundColor(.white)
+            .background(Color(UIColor.systemYellow))
+            .cornerRadius(10.0)
+            
+            Spacer()
+        }.foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
         .padding()
         .statusBar(hidden: true)
     }

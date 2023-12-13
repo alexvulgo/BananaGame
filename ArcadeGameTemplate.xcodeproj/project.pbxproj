@@ -19,6 +19,7 @@
 		271CB26E27D6A58A00615359 /* ArcadeGameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271CB26D27D6A58A00615359 /* ArcadeGameScene.swift */; };
 		271CB27027D74CAF00615359 /* GameDurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271CB26F27D74CAF00615359 /* GameDurationView.swift */; };
 		271CB27227D74CB900615359 /* GameScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271CB27127D74CB900615359 /* GameScoreView.swift */; };
+		FAE76EEB2B29CF660045EDEF /* IntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE76EEA2B29CF660045EDEF /* IntroView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		271CB26D27D6A58A00615359 /* ArcadeGameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadeGameScene.swift; sourceTree = "<group>"; usesTabs = 0; };
 		271CB26F27D74CAF00615359 /* GameDurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDurationView.swift; sourceTree = "<group>"; };
 		271CB27127D74CB900615359 /* GameScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScoreView.swift; sourceTree = "<group>"; };
+		FAE76EEA2B29CF660045EDEF /* IntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 			isa = PBXGroup;
 			children = (
 				271CB26027D656BA00615359 /* MainScreenView.swift */,
+				FAE76EEA2B29CF660045EDEF /* IntroView.swift */,
 			);
 			path = "Main Screen";
 			sourceTree = "<group>";
@@ -202,6 +205,7 @@
 				271CB25127D6569700615359 /* ArcadeGameTemplateApp.swift in Sources */,
 				271CB26B27D6659600615359 /* Constants.swift in Sources */,
 				271CB26827D6570800615359 /* GameOverView.swift in Sources */,
+				FAE76EEB2B29CF660045EDEF /* IntroView.swift in Sources */,
 				271CB26327D656C100615359 /* ArcadeGameView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
