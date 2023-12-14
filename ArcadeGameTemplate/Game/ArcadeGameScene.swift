@@ -225,7 +225,13 @@ extension ArcadeGameScene {
     }
     
     private func gameOver() {
+        life -= 1
+        if life <= 0 { life = 0}
+        lifeNodes[life].texture = SKTexture(imageNamed: "empty")
         
+        if life <= 0 && !isGameOver {
+            gameLogic.isGameOver = true
+        }
     }
     
     
@@ -355,10 +361,11 @@ extension ArcadeGameScene {
                 self.monkeyDieAnimation(monkey: contact.bodyB.node! as! SKSpriteNode)
             }
             
-            self.gameLogic.decrementCounter()
-            if self.counter == 0 {
-                self.finishGame()
-            }
+            //self.gameLogic.decrementCounter()
+            //if self.counter == 0 {
+                //self.finishGame()
+            self.gameOver()
+            
         }
         
         if (contact.bodyA.categoryBitMask == bitMasks.coin.rawValue || contact.bodyB.categoryBitMask == bitMasks.coin.rawValue) && ((contact.bodyA.categoryBitMask == bitMasks.ground.rawValue || contact.bodyB.categoryBitMask == bitMasks.ground.rawValue) || (contact.bodyA.categoryBitMask == bitMasks.banana.rawValue || contact.bodyB.categoryBitMask == bitMasks.banana.rawValue)){
