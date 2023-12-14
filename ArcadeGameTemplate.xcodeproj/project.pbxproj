@@ -19,6 +19,7 @@
 		271CB26E27D6A58A00615359 /* ArcadeGameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271CB26D27D6A58A00615359 /* ArcadeGameScene.swift */; };
 		271CB27027D74CAF00615359 /* GameDurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271CB26F27D74CAF00615359 /* GameDurationView.swift */; };
 		271CB27227D74CB900615359 /* GameScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271CB27127D74CB900615359 /* GameScoreView.swift */; };
+		671C738C2B2B1F6700FA90F5 /* backgroundMusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 671C738B2B2B1F6700FA90F5 /* backgroundMusic.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		271CB26D27D6A58A00615359 /* ArcadeGameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadeGameScene.swift; sourceTree = "<group>"; usesTabs = 0; };
 		271CB26F27D74CAF00615359 /* GameDurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDurationView.swift; sourceTree = "<group>"; };
 		271CB27127D74CB900615359 /* GameScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScoreView.swift; sourceTree = "<group>"; };
+		671C738B2B2B1F6700FA90F5 /* backgroundMusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = backgroundMusic.mp3; path = ../../../Downloads/backgroundMusic.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +53,7 @@
 		271CB24427D6569700615359 = {
 			isa = PBXGroup;
 			children = (
+				671C738B2B2B1F6700FA90F5 /* backgroundMusic.mp3 */,
 				271CB24F27D6569700615359 /* ArcadeGameTemplate */,
 				271CB24E27D6569700615359 /* Products */,
 			);
@@ -183,6 +186,7 @@
 			files = (
 				271CB25827D6569900615359 /* Preview Assets.xcassets in Resources */,
 				271CB25527D6569900615359 /* Assets.xcassets in Resources */,
+				671C738C2B2B1F6700FA90F5 /* backgroundMusic.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
