@@ -17,7 +17,7 @@ class ArcadeGameLogic: ObservableObject {
         
         self.currentScore = 0
         self.sessionDuration = 0
-        
+        self.counter = 3
         self.isGameOver = false
     }
     
@@ -54,6 +54,12 @@ class ArcadeGameLogic: ObservableObject {
             print("Game over triggered")
             self.isGameOver = true
         }
+    }
+    
+    @Published var  counter : Int = 0
+    
+    func decrementCounter() {
+        counter -= 1
     }
     
 }

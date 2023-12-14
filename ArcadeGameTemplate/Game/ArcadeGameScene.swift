@@ -16,16 +16,15 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
     var gameLogic: ArcadeGameLogic = ArcadeGameLogic.shared
     
     var player: SKSpriteNode = SKSpriteNode()
-    var monkey: SKSpriteNode = SKSpriteNode()
     
     var cam = SKCameraNode()
     
     var floor = SKSpriteNode(imageNamed: "floor")
+    var roof = SKSpriteNode()
     var background1 = SKSpriteNode(imageNamed: "sky")
+    var backgroundMusic: SKAudioNode!
     
     var lifeNodes : [SKSpriteNode] = []
-    
-    var life : Int = 3
     
     var isMovingToTheRight: Bool = false
     var isMovingToTheLeft: Bool = false
@@ -33,8 +32,11 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
     
     var rightBtn: SKSpriteNode!
     var leftBtn: SKSpriteNode!
-    //    var jumpBtn: SKSpriteNode!
     
+    var monkeyGenerationTimer: Timer?
+    var dropletShootTimer: Timer?
+    var coinSpawnTimer: Timer?
+  
     // Keeps track of when the last update happend.
     // Used to calculate how much time has passed between updates.
     var lastUpdate: TimeInterval = 0
@@ -44,6 +46,8 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
         case ground = 0b10
         case monkey = 0b11
         case droplet = 0b101
+        case coin = 0b100
+        case roof = 0b1001
     }
     
     override func didMove(to view: SKView) {
@@ -55,17 +59,6 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         
-        //MARK: SCENE SIZE
-        
-        
-        
-        // ...
-        //        MARK: CAMERA CENTERED WITH PLAYER
-        //        self.cam.position.x = player.position.x
-        //        self.leftBtn.position.x = cam.position.x - 300
-        //        self.rightBtn.position.x = cam.position.x - 100
-        //        self.jumpBtn.position.x = cam.position.x + 200
-        
         if isMovingToTheLeft {
             self.moveLeft()
         }
@@ -74,19 +67,24 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
             self.moveRight()
         }
         
-        // If the game over condition is met, the game will finish
-      /*  if self.isGameOver { self.finishGame() }
+        if self.isGameOver {
+            self.finishGame()
+            backgroundMusic.run(SKAction.stop())
+        }
         
-        // The first time the update function is called we must initialize the
-        // lastUpdate variable
-        if self.lastUpdate == 0 { self.lastUpdate = currentTime }
+        let characterHalfWidth = player.size.width / 2
         
-        // Calculates how much time has passed since the last update
-        let timeElapsedSinceLastUpdate = currentTime - self.lastUpdate
-        // Increments the length of the game session at the game logic
-        self.gameLogic.increaseSessionTime(by: timeElapsedSinceLastUpdate)
+               
+        let minX = characterHalfWidth
+        let maxX = size.width - characterHalfWidth
+       
+        var characterX = player.position.x
         
-        self.lastUpdate = currentTime*/
+               
+        characterX = max(minX, min(characterX, maxX))
+               
+        player.position = CGPoint(x: characterX, y: player.position.y)
+        
     }
     
 }
@@ -98,25 +96,15 @@ extension ArcadeGameScene {
         self.gameLogic.setUpGame()
         self.setUpBg()
         self.setUpFloor()
+        self.setUpRoof()
+        self.setUpMusic()
         self.createPlayer(at: CGPoint(x: frame.size.width / 2, y: frame.size.height / 2))
-        //        self.createTile(at: CGPoint(x: 600, y: 170))
         self.setUpButtons()
-        self.createMonkeys()
+        self.startMonkeyGeneration()
+        self.startDropletShoot()
+        self.startCoinSpawn()
         self.setupLife()
     }
-    
-    //    private func createTile(at position: CGPoint) {
-    //        let tile = SKSpriteNode(imageNamed: "tile")
-    //        tile.size = CGSize(width: 70, height: 30)
-    //        tile.position = position
-    //        tile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: tile.size.width, height: tile.size.height))
-    //        tile.physicsBody?.affectedByGravity = false
-    //        tile.physicsBody?.allowsRotation = false
-    //        tile.physicsBody?.isDynamic = false
-    //
-    //
-    //        addChild(tile)
-    //    }
     
     private func setUpButtons() {
         self.leftBtn = SKSpriteNode(imageNamed: "left")
@@ -132,19 +120,10 @@ extension ArcadeGameScene {
         self.rightBtn.position.x = (frame.size.width / 2) + 50
         self.rightBtn.position.y = 100
         self.rightBtn.zPosition = 100
-        
-        //        self.jumpBtn = SKSpriteNode(imageNamed: "jump")
-        //        self.jumpBtn.name = "jump"
-        //        self.jumpBtn.size = CGSize(width: 50, height: 50)
-        //        self.jumpBtn.position.x = frame.size.width - 75
-        //        self.jumpBtn.position.y = 200
-        //        self.jumpBtn.zPosition = 100
-        
-        
-        
+       
         addChild(self.leftBtn)
         addChild(self.rightBtn)
-        //        addChild(self.jumpBtn)
+        
     }
     
     private func createPlayer(at position: CGPoint) {
@@ -158,8 +137,7 @@ extension ArcadeGameScene {
         self.player.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: self.player.texture!.size().width, height: self.player.texture!.size().height))
         self.player.physicsBody?.affectedByGravity = true
         self.player.physicsBody?.allowsRotation = false
-        
-        
+        self.player.physicsBody?.categoryBitMask = bitMasks.banana.rawValue
         
         addChild(self.player)
     }
@@ -171,9 +149,32 @@ extension ArcadeGameScene {
         floor.physicsBody?.affectedByGravity = false
         floor.physicsBody?.allowsRotation = false
         floor.physicsBody?.isDynamic = false
-        
+        floor.physicsBody?.categoryBitMask = bitMasks.ground.rawValue
+        floor.physicsBody?.contactTestBitMask = bitMasks.monkey.rawValue
         
         addChild(floor)
+    }
+    
+    private func setUpRoof() {
+        roof.position = CGPoint(x: frame.size.width / 2, y: frame.size.height-50)
+        roof.size = CGSize(width: frame.size.width, height: 0.1)
+        roof.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: frame.size.width, height: 0.1))
+        roof.physicsBody?.affectedByGravity = false
+        roof.physicsBody?.allowsRotation = false
+        roof.physicsBody?.isDynamic = false
+        roof.physicsBody?.categoryBitMask = bitMasks.roof.rawValue
+        roof.physicsBody?.collisionBitMask = 0
+        
+        addChild(roof)
+    }
+    
+    private func setUpMusic() {
+        if let musicURL = Bundle.main.url(forResource: "backgroundMusic", withExtension: "mp3") {
+            backgroundMusic = SKAudioNode(url: musicURL)
+            addChild(backgroundMusic)
+        }
+        
+        backgroundMusic.run(SKAction.play())
     }
     
     private func setUpBg() {
@@ -215,14 +216,15 @@ extension ArcadeGameScene {
         addChild(node1)
         addChild(node2)
         addChild(node3)
-        
-        lifeNodes.append(node1)
-        lifeNodes.append(node2)
-        lifeNodes.append(node3)
     }
     
     
-   
+    private func setupLifePosition(_ node: SKSpriteNode, i:CGFloat, j:CGFloat) {
+        
+        node.setScale(0.5)
+        node.zPosition = 50.0
+        
+    }
     
     private func setUpPhysicsWorld() {
         // TODO: Customize!
@@ -230,13 +232,64 @@ extension ArcadeGameScene {
         self.physicsWorld.contactDelegate = self
     }
     
-    
-    
     private func restartGame() {
         self.gameLogic.restartGame()
     }
     
-    private func createMonkeys() {
+    private func startMonkeyGeneration() {
+        monkeyGenerationTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(createMonkeys), userInfo: nil, repeats: true)
+    }
+    
+    @objc private func createMonkeys() {
+        let animationFrames: [SKTexture] = [
+            SKTexture(imageNamed: "monkey1"),
+            SKTexture(imageNamed: "monkey2")
+        ]
+        
+        let monkey = SKSpriteNode(texture: animationFrames[0])
+        let temp = CGFloat.random(in: 32..<100)
+        monkey.name = "monkey"
+        
+        monkey.size = CGSize(width: temp, height: temp)
+        monkey.position = CGPoint(x: CGFloat.random(in: frame.minX+self.player.size.width..<frame.maxX-self.player.size.width), y: frame.height)
+        monkey.zPosition = 1000
+        
+        monkey.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: monkey.texture!.size().width, height: monkey.texture!.size().height))
+        monkey.physicsBody?.affectedByGravity = true
+        monkey.physicsBody?.isDynamic = true
+        monkey.physicsBody?.allowsRotation = false
+        monkey.physicsBody?.categoryBitMask = bitMasks.monkey.rawValue
+        monkey.physicsBody?.contactTestBitMask = (bitMasks.ground.rawValue | bitMasks.droplet.rawValue | bitMasks.banana.rawValue)
+        monkey.physicsBody?.collisionBitMask = 0
+        monkey.physicsBody?.linearDamping = CGFloat.random(in: 3..<10)
+        
+        addChild(monkey)
+        
+        let animationAction = SKAction.animate(with: animationFrames, timePerFrame: 0.5)
+        let repeatAction = SKAction.repeatForever(animationAction)
+
+        // Run the animation on the sprite
+        monkey.run(repeatAction)
+    }
+    
+    private func monkeyDieAnimation (monkey : SKSpriteNode) {
+        
+        let animationFrames: [SKTexture] = [
+            SKTexture(imageNamed: "Dead1"),
+            SKTexture(imageNamed: "Dead2"),
+            SKTexture(imageNamed: "Dead3"),
+            SKTexture(imageNamed: "Dead4")
+        ]
+        
+        monkey.physicsBody?.categoryBitMask = 0
+        let animationAction = SKAction.animate(with: animationFrames, timePerFrame: 0.1)
+        let dieAction = SKAction.removeFromParent()
+        let deadSequence = SKAction.sequence([animationAction,dieAction])
+        monkey.run(deadSequence)
+        
+    }
+    
+   /* private func createMonkeys() {
         self.monkey = SKSpriteNode(imageNamed: "monkey")
         self.monkey.name = "monkey"
         
@@ -257,22 +310,64 @@ extension ArcadeGameScene {
         addChild(self.monkey)
         
         
-    }
+    }*/
     
     func didBegin(_ contact: SKPhysicsContact) {
+       
         if (contact.bodyA.categoryBitMask == bitMasks.droplet.rawValue || contact.bodyB.categoryBitMask == bitMasks.droplet.rawValue) && (contact.bodyA.categoryBitMask == bitMasks.monkey.rawValue || contact.bodyB.categoryBitMask == bitMasks.monkey.rawValue)   {
+            if(contact.bodyA.categoryBitMask == bitMasks.monkey.rawValue){
+                self.monkeyDieAnimation(monkey: contact.bodyA.node! as! SKSpriteNode)
+                contact.bodyB.node?.removeFromParent()
+                
+            }
+            else{
+                self.monkeyDieAnimation(monkey: contact.bodyB.node! as! SKSpriteNode)
+                contact.bodyA.node?.removeFromParent()
+            }
+            self.gameLogic.score(points: 5)
+        }
+        
+        if (contact.bodyA.categoryBitMask == bitMasks.coin.rawValue || contact.bodyB.categoryBitMask == bitMasks.coin.rawValue) && (contact.bodyA.categoryBitMask == bitMasks.banana.rawValue || contact.bodyB.categoryBitMask == bitMasks.banana.rawValue)   {
+            self.gameLogic.score(points: 10)
+        }
+        
+        if (contact.bodyA.categoryBitMask == bitMasks.roof.rawValue || contact.bodyB.categoryBitMask == bitMasks.roof.rawValue) && (contact.bodyA.categoryBitMask == bitMasks.droplet.rawValue || contact.bodyB.categoryBitMask == bitMasks.droplet.rawValue)   {
+            if(contact.bodyA.categoryBitMask == bitMasks.droplet.rawValue){
+                contact.bodyA.node?.removeFromParent()
+            }
+            else{
+                contact.bodyB.node?.removeFromParent()
+            }
+        }
+        
+        if (contact.bodyA.categoryBitMask == bitMasks.monkey.rawValue || contact.bodyB.categoryBitMask == bitMasks.monkey.rawValue) && ((contact.bodyA.categoryBitMask == bitMasks.ground.rawValue || contact.bodyB.categoryBitMask == bitMasks.ground.rawValue) || (contact.bodyA.categoryBitMask == bitMasks.banana.rawValue || contact.bodyB.categoryBitMask == bitMasks.banana.rawValue)) {
             
-            monkey.removeFromParent()
-            finishGame()
+            if(contact.bodyA.categoryBitMask == bitMasks.monkey.rawValue){
+                self.monkeyDieAnimation(monkey: contact.bodyA.node! as! SKSpriteNode)
+                
+            }
+            else{
+                self.monkeyDieAnimation(monkey: contact.bodyB.node! as! SKSpriteNode)
+            }
+            
+            self.gameLogic.decrementCounter()
+            if self.counter == 0 {
+                self.finishGame()
+            }
+        }
+        
+        if (contact.bodyA.categoryBitMask == bitMasks.coin.rawValue || contact.bodyB.categoryBitMask == bitMasks.coin.rawValue) && ((contact.bodyA.categoryBitMask == bitMasks.ground.rawValue || contact.bodyB.categoryBitMask == bitMasks.ground.rawValue) || (contact.bodyA.categoryBitMask == bitMasks.banana.rawValue || contact.bodyB.categoryBitMask == bitMasks.banana.rawValue)){
+            if contact.bodyA.categoryBitMask == bitMasks.coin.rawValue {
+                contact.bodyA.node?.removeFromParent()
+            }
+            else{
+                contact.bodyB.node?.removeFromParent()
+            }
         }
     }
     
     
     func didEnd(_ contact: SKPhysicsContact) {
-        // Check if the banana leaves contact with the ground
-        if contact.bodyA.categoryBitMask == bitMasks.ground.rawValue || contact.bodyB.categoryBitMask == bitMasks.ground.rawValue {
-           
-        }
     }
 }
 
@@ -288,8 +383,6 @@ extension ArcadeGameScene {
                 self.isMovingToTheRight = true
             } else if touchedNode.name == "left" {
                 self.isMovingToTheLeft = true
-            } else {
-                self.shoot()
             }
         }
     }
@@ -309,20 +402,101 @@ extension ArcadeGameScene {
 extension ArcadeGameScene {
     
     private func moveLeft() {
-        self.player.physicsBody?.node?.position.x -= 3
-        //        self.player.physicsBody?.applyForce(CGVector(dx: -5, dy: 0))
+        let animationFrames: [SKTexture] = [
+            SKTexture(imageNamed: "tile005"),
+            SKTexture(imageNamed: "tile006"),
+            SKTexture(imageNamed: "tile007"),
+            SKTexture(imageNamed: "tile008")
+        ]
+        
+            let animationAction = SKAction.animate(with: animationFrames, timePerFrame: 0.1)
+            self.player.run(animationAction)
+            let moveAction = SKAction.moveBy(x: -5, y: 0, duration: 0.1)
+            self.player.run(moveAction)
     }
     
     private func moveRight() {
-        self.player.physicsBody?.node?.position.x += 3
-        //        self.player.physicsBody?.applyForce(CGVector(dx: 5, dy: 0))
+        let animationFrames: [SKTexture] = [
+            SKTexture(imageNamed: "tile007"),
+            SKTexture(imageNamed: "tile006"),
+            SKTexture(imageNamed: "tile005"),
+            SKTexture(imageNamed: "tile008")
+        ]
+        
+            let animationAction = SKAction.animate(with: animationFrames, timePerFrame: 0.1)
+            self.player.run(animationAction)
+            let moveAction = SKAction.moveBy(x: 5, y: 0, duration: 0.1)
+            self.player.run(moveAction)
     }
 }
 
 //MARK: PLAYER SHOOTING
 extension ArcadeGameScene {
     
-    private func shoot() {
+    private func startDropletShoot() {
+        dropletShootTimer = Timer.scheduledTimer(timeInterval: 0.8, target: self, selector: #selector(shoot), userInfo: nil, repeats: true)
+    }
+    
+    @objc private func shoot() {
+        let droplet = SKShapeNode(circleOfRadius: 10.0)
+        droplet.zPosition = 1
+        droplet.position = CGPoint(x: player.position.x, y: player.position.y + (player.size.height / 2) + 1)
+        droplet.fillColor = SKColor.white
+        
+        droplet.physicsBody = SKPhysicsBody(circleOfRadius: 5.0)
+        droplet.physicsBody?.isDynamic = true
+        droplet.physicsBody?.affectedByGravity = false
+        droplet.physicsBody?.categoryBitMask = bitMasks.droplet.rawValue
+        droplet.physicsBody?.collisionBitMask = bitMasks.roof.rawValue
+        droplet.physicsBody?.contactTestBitMask = bitMasks.roof.rawValue
+        droplet.zPosition=100
+        
+        self.addChild(droplet)
+        
+        //animate the banana and then shoot
+        let animationFrames: [SKTexture] = [
+            SKTexture(imageNamed: "tile010"),
+            SKTexture(imageNamed: "tile011"),
+            SKTexture(imageNamed: "tile012")
+        ]
+        
+        
+        let animationAction = SKAction.animate(with: animationFrames, timePerFrame: 0.1)
+        player.run(animationAction)
+        droplet.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 2))
+    }
+    
+    private func startCoinSpawn() {
+        coinSpawnTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(createCoins), userInfo: nil, repeats: true)
+    }
+    
+    @objc private func createCoins() {
+        let coin = SKSpriteNode(imageNamed: "coin")
+        coin.name = "coin"
+        
+        coin.size = CGSize(width: 32, height: 32)
+        coin.position = CGPoint(x: CGFloat.random(in: frame.minX+self.player.size.width..<frame.maxX-self.player.size.width), y: frame.height+1)
+        coin.zPosition = 1000
+        coin.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: coin.texture!.size().width, height: coin.texture!.size().height))
+        coin.physicsBody?.affectedByGravity = true
+        coin.physicsBody?.isDynamic = true
+        coin.physicsBody?.allowsRotation = false
+        coin.physicsBody?.categoryBitMask = bitMasks.coin.rawValue
+        coin.physicsBody?.collisionBitMask = 0
+        coin.physicsBody?.contactTestBitMask = (bitMasks.ground.rawValue | bitMasks.banana.rawValue)
+        coin.physicsBody?.linearDamping = CGFloat.random(in: 5..<10)
+        
+        addChild(coin)
+        
+        let goLeft = SKAction.moveBy(x: -10, y: 0, duration: 0.5)
+        let goRight = SKAction.moveBy(x: 10, y: 0, duration: 0.5)
+        let goLeftAndRight = SKAction.sequence([goLeft,goRight])
+        let endlessLeftAndRight = SKAction.repeatForever(goLeftAndRight)
+        
+        coin.run(endlessLeftAndRight)
+    }
+    
+    /*private func shoot() {
         let droplet = SKShapeNode(circleOfRadius: 5.0)
         droplet.zPosition = 1
         droplet.position = CGPoint(x: player.position.x, y: player.position.y + (player.size.height / 2) + 1)
@@ -336,7 +510,7 @@ extension ArcadeGameScene {
         self.addChild(droplet)
         
         droplet.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 2))
-    }
+    }*/
     
 }
 
@@ -363,6 +537,11 @@ extension ArcadeGameScene {
         // Did an enemy cross a position it should not have crossed?
         
         return gameLogic.isGameOver
+    }
+    
+    var counter : Int {
+        
+        return gameLogic.counter
     }
     
     private func finishGame() {
