@@ -26,6 +26,8 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
     
     var lifeNodes : [SKSpriteNode] = []
     
+    var life : Int = 3
+    
     var isMovingToTheRight: Bool = false
     var isMovingToTheLeft: Bool = false
     var jumpCount: Int = 0
@@ -216,15 +218,18 @@ extension ArcadeGameScene {
         addChild(node1)
         addChild(node2)
         addChild(node3)
+        
+        lifeNodes.append(node1)
+        lifeNodes.append(node2)
+        lifeNodes.append(node3)
+    }
+    
+    private func gameOver() {
+        
     }
     
     
-    private func setupLifePosition(_ node: SKSpriteNode, i:CGFloat, j:CGFloat) {
-        
-        node.setScale(0.5)
-        node.zPosition = 50.0
-        
-    }
+    
     
     private func setUpPhysicsWorld() {
         // TODO: Customize!
