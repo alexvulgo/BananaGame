@@ -387,20 +387,50 @@ extension ArcadeGameScene {
 extension ArcadeGameScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-    
+        
+        //MARK: DEFAULT CONTROLS
+//        for touch in touches {
+//            let touchLocation = touch.location(in: self)
+//            let touchedNode = atPoint(touchLocation)
+//            if touchedNode.name == "right" {
+//                self.isMovingToTheLeft = false
+//                self.isMovingToTheRight = true
+//            } else if touchedNode.name == "left" {
+//                self.isMovingToTheRight = false
+//                self.isMovingToTheLeft = true
+//            }
+//        }
+        
+        
+        //MARK: PLAYER FOLLOWS FINGERS
         for touch in touches {
             let touchLocation = touch.location(in: self)
-            let touchedNode = atPoint(touchLocation)
-            if touchedNode.name == "right" {
-                self.isMovingToTheRight = true
-            } else if touchedNode.name == "left" {
-                self.isMovingToTheLeft = true
-            }
+            player.position.x = touchLocation.x
         }
+        
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // TODO: Customize!
+        
+        
+        //MARK: SMOOTH CONTROLS
+//        guard let touch = touches.first else { return }
+//        let touchLocation = touch.location(in: self)
+//        let touchedNode = atPoint(touchLocation)
+//        if touchedNode.name == "right" {
+//            self.isMovingToTheLeft = false
+//            self.isMovingToTheRight = true
+//        } else if touchedNode.name == "left" {
+//            self.isMovingToTheRight = false
+//            self.isMovingToTheLeft = true
+//        }
+        
+        //MARK: PLAYER FOLLOWS FINGERS
+        for touch in touches {
+            let touchLocation = touch.location(in: self)
+            player.position.x = touchLocation.x
+        }
+        
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -446,11 +476,11 @@ extension ArcadeGameScene {
 extension ArcadeGameScene {
     
     private func startDropletShoot() {
-        dropletShootTimer = Timer.scheduledTimer(timeInterval: 0.8, target: self, selector: #selector(shoot), userInfo: nil, repeats: true)
+        dropletShootTimer = Timer.scheduledTimer(timeInterval: 0.6, target: self, selector: #selector(shoot), userInfo: nil, repeats: true)
     }
     
     @objc private func shoot() {
-        let droplet = SKShapeNode(circleOfRadius: 10.0)
+        let droplet = SKShapeNode(circleOfRadius: 6.0)
         droplet.zPosition = 1
         droplet.position = CGPoint(x: player.position.x, y: player.position.y + (player.size.height / 2) + 1)
         droplet.fillColor = SKColor.white
