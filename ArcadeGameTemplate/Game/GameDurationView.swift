@@ -12,22 +12,41 @@ import SwiftUI
  * Customize it to match the visual identity of your game.
  */
 
+
+
 struct GameDurationView: View {
+    
+    
     @Binding var time: TimeInterval
     
+    var lifeIndexCount = 0
+    
     var body: some View {
-        HStack {
-            Image(systemName: "heart.fill")
-                .font(.headline)
-            Spacer()
-            Text("\(Int(time))")
-                .font(.headline)
+        
+        
+        
+        VStack {
+            Image("banana222")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+               
+            
+            Image("banana222")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+            
+            
+            Image("banana222")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+            
+           
         }
         .frame(maxWidth: 100)
         .padding(24)
         .foregroundColor(.white)
-        .background(Color(.systemYellow))
-        .cornerRadius(10)
+        //.background(Color(.systemYellow))
+        //.cornerRadius(10)
     }
 }
 

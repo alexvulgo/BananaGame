@@ -52,35 +52,23 @@ struct ArcadeGameView: View {
                 .statusBar(hidden: true)
             
             VStack {
-                HStack() {
+                HStack(){
                     
-                    GameDurationView(time: $gameLogic.sessionDuration)
+
+                   Spacer()
                     
-                    Spacer()
+          
                     
                     GameScoreView(score: $gameLogic.currentScore)
+                        .padding()
+                        
                 }
                 .padding()
                 .padding(.top, 40)
-                .padding(.horizontal, 60)
+                
                 
                 Spacer()
-                
-//                HStack(spacing: 16) {
-//                    Circle()
-//                        .frame(width: 50, height: 50)
-//                        .padding(.leading, 100)
-//                        .padding(.bottom, 50)
-//                        .foregroundStyle(.white)
-//                    
-//                    Circle()
-//                        .frame(width: 50, height: 50)
-//                        .padding(.bottom, 50)
-//                        .foregroundStyle(.white)
-//                    
-//                    
-//                    Spacer()
-//                }
+              
             }
         }
         .ignoresSafeArea()

@@ -21,9 +21,9 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
     var cam = SKCameraNode()
     
     var floor = SKSpriteNode(imageNamed: "floor")
-    var background1 = SKSpriteNode(imageNamed: "plx-1")
+    var background1 = SKSpriteNode(imageNamed: "sky")
     
-    
+    var lifeNodes : [SKSpriteNode] = []
     
     var isMovingToTheRight: Bool = false
     var isMovingToTheLeft: Bool = false
@@ -100,6 +100,7 @@ extension ArcadeGameScene {
         //        self.createTile(at: CGPoint(x: 600, y: 170))
         self.setUpButtons()
         self.createMonkeys()
+        self.setupLife()
     }
     
     //    private func createTile(at position: CGPoint) {
@@ -183,6 +184,8 @@ extension ArcadeGameScene {
         background1.size = frame.size
         
         
+        
+        
         // Set the background's zPosition to be behind other nodes
         background1.zPosition = -5
         
@@ -190,6 +193,33 @@ extension ArcadeGameScene {
         // Add the background to the scene
         addChild(background1)
         
+        
+    }
+    
+    
+    private func setupLife() {
+        let node1 = SKSpriteNode(imageNamed: "banana222")
+        let node2 = SKSpriteNode(imageNamed: "banana222")
+        let node3 = SKSpriteNode(imageNamed: "banana222")
+        
+        node1.size = CGSize(width: 20, height: 20)
+        node2.size = CGSize(width: 20, height: 20)
+        node3.size = CGSize(width: 20, height: 20)
+        
+        node1.position = CGPoint(x: node1.size.width / 2 + 50, y: frame.size.height - 100)
+        node2.position = CGPoint(x: node2.size.width / 2 + 85, y: frame.size.height - 100)
+        node3.position = CGPoint(x: node3.size.width / 2 + 120, y: frame.size.height - 100)
+        
+        addChild(node1)
+        addChild(node2)
+        addChild(node3)
+    }
+    
+    
+    private func setupLifePosition(_ node: SKSpriteNode, i:CGFloat, j:CGFloat) {
+        
+        node.setScale(0.5)
+        node.zPosition = 50.0
         
     }
     
