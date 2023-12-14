@@ -31,8 +31,6 @@ struct ContentView: View {
             ArcadeGameView(currentGameState: $currentGameState)
                 .environmentObject(gameLogic)
             
-            
-            
         case .gameOver:
             GameOverView(currentGameState: $currentGameState)
                 .environmentObject(gameLogic)
