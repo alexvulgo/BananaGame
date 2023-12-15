@@ -18,16 +18,16 @@ struct GameScoreView: View {
     var body: some View {
         
         HStack {
-
+            
             Text("\(score)")
                 .font(.title)
-                
+            
         }
         .frame(maxWidth: 100)
         .padding(24)
         .foregroundColor(.white)
         //.background(Color(.systemYellow))
-       // .cornerRadius(10)
+        // .cornerRadius(10)
     }
 }
 
