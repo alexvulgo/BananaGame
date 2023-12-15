@@ -7,7 +7,9 @@ import SwiftUI
 
 struct GameOverView: View {
     
+   
     @Binding var currentGameState: GameState
+    
     
     var body: some View {
         ZStack {
@@ -22,6 +24,7 @@ struct GameOverView: View {
                     .foregroundColor(.accentColor)
                     .glowBorder(color: Color("mybrown"), lineWidth: 5)
                     .padding(.bottom, 40)
+                
                 
                 Image ("monkeyeats")
                     .resizable()

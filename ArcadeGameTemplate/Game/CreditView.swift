@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CreditView: View {
     
-    @Binding var score: Int
+    let loadData = UserDefaults.standard
     
     var body: some View {
         VStack(alignment: .leading){
@@ -17,12 +17,11 @@ struct CreditView: View {
                 .font(.title)
                 .bold()
             
-            Text("ciao")
+           
         }
     }
 }
 
 #Preview {
-    CreditView(score: .constant(100))
-        .previewLayout(.fixed(width: 300, height: 100))
+    CreditView()
 }

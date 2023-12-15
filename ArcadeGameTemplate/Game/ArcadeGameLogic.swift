@@ -28,7 +28,7 @@ class ArcadeGameLogic: ObservableObject {
     // Keeps track of the current score of the player
     @Published var currentScore: Int = 0
     
-    let highScore  = UserDefaults.standard.integer(forKey: "highScore")
+     let highScore  = UserDefaults.standard.integer(forKey: "highScore")
     
     // Increases the score by a certain amount of points
     func score(points: Int) {
