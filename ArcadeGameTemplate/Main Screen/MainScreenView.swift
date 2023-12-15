@@ -33,10 +33,10 @@ struct MainScreenView: View {
              * # PRO TIP!
              * The game title can be customized to represent the visual identity of the game
              */
-            Text("\(self.gameTitle)")
-                .font(.title)
-                .fontWeight(.bold)
-                .foregroundStyle(Color(UIColor.black))
+            //Text("\(self.gameTitle)")
+               // .font(.title)
+                //.fontWeight(.bold)
+               // .foregroundStyle(Color(UIColor.black))
             
             
             
@@ -50,9 +50,12 @@ struct MainScreenView: View {
                     .padding()
                     .frame(maxWidth: 300)
             }
-            .foregroundColor(.white)
-            .background(Color(UIColor.systemYellow))
-            .cornerRadius(10.0)
+            
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .foregroundColor(.accentColor)
+                .glowBorder(color: Color("mybrown"), lineWidth: 5)
+                .padding(.bottom, 40)
             
             
             
@@ -63,9 +66,11 @@ struct MainScreenView: View {
                     .padding()
                     .frame(maxWidth: 300)
             }
-            .foregroundColor(.white)
-            .background(Color(UIColor.systemYellow))
-            .cornerRadius(10.0)
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .foregroundColor(.accentColor)
+                .glowBorder(color: Color("mybrown"), lineWidth: 5)
+                .padding(.bottom, 40)
             
             Spacer()
         }.foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
