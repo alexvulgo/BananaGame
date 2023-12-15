@@ -32,14 +32,12 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
     var isMovingToTheLeft: Bool = false
     var jumpCount: Int = 0
     
-    var rightBtn: SKSpriteNode!
-    var leftBtn: SKSpriteNode!
+   /* var rightBtn: SKSpriteNode!
+    var leftBtn: SKSpriteNode!*/
     
     var monkeyGenerationTimer: Timer?
     var dropletShootTimer: Timer?
     var coinSpawnTimer: Timer?
-    
-   
     
   
     // Keeps track of when the last update happend.
@@ -104,14 +102,14 @@ extension ArcadeGameScene {
         self.setUpRoof()
         self.setUpMusic()
         self.createPlayer(at: CGPoint(x: frame.size.width / 2, y: frame.size.height / 2))
-        self.setUpButtons()
+        //self.setUpButtons()
         self.startMonkeyGeneration()
         self.startDropletShoot()
         self.startCoinSpawn()
         self.setupLife()
     }
     
-    private func setUpButtons() {
+   /* private func setUpButtons() {
         self.leftBtn = SKSpriteNode(imageNamed: "left")
         self.leftBtn.name = "left"
         self.leftBtn.size = CGSize(width: 50, height: 50)
@@ -129,7 +127,7 @@ extension ArcadeGameScene {
         addChild(self.leftBtn)
         addChild(self.rightBtn)
         
-    }
+    }*/
     
     private func createPlayer(at position: CGPoint) {
         self.player = SKSpriteNode(imageNamed: "tile000")
@@ -148,8 +146,8 @@ extension ArcadeGameScene {
     }
     
     private func setUpFloor() {
-        floor.position = CGPoint(x: frame.size.width / 2, y: (frame.size.height / 7) - 10)
-        floor.size = CGSize(width: frame.size.width, height: frame.size.height / 6)
+        floor.position = CGPoint(x: frame.size.width / 2, y: (frame.size.height / 6))
+        floor.size = CGSize(width: frame.size.width, height: (frame.size.height / 5) + 15)
         floor.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: frame.size.width, height: 100))
         floor.physicsBody?.affectedByGravity = false
         floor.physicsBody?.allowsRotation = false
@@ -483,32 +481,34 @@ extension ArcadeGameScene {
     }
     
     @objc private func shoot() {
-        let droplet = SKShapeNode(circleOfRadius: 6.0)
-        droplet.zPosition = 1
-        droplet.position = CGPoint(x: player.position.x, y: player.position.y + (player.size.height / 2) + 1)
-        droplet.fillColor = SKColor.white
-        
-        droplet.physicsBody = SKPhysicsBody(circleOfRadius: 5.0)
-        droplet.physicsBody?.isDynamic = true
-        droplet.physicsBody?.affectedByGravity = false
-        droplet.physicsBody?.categoryBitMask = bitMasks.droplet.rawValue
-        droplet.physicsBody?.collisionBitMask = bitMasks.roof.rawValue
-        droplet.physicsBody?.contactTestBitMask = bitMasks.roof.rawValue
-        droplet.zPosition=100
-        
-        self.addChild(droplet)
-        
-        //animate the banana and then shoot
-        let animationFrames: [SKTexture] = [
-            SKTexture(imageNamed: "tile010"),
-            SKTexture(imageNamed: "tile011"),
-            SKTexture(imageNamed: "tile012")
-        ]
-        
-        
-        let animationAction = SKAction.animate(with: animationFrames, timePerFrame: 0.1)
-        player.run(animationAction)
-        droplet.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 2))
+        for i in 1..<4 {
+            let droplet = SKShapeNode(circleOfRadius: 3.0)
+            
+            droplet.position = CGPoint(x: player.position.x, y: player.position.y + (player.size.height / 2) + CGFloat(i))
+            droplet.fillColor = SKColor.white
+            
+            droplet.physicsBody = SKPhysicsBody(circleOfRadius: 5.0)
+            droplet.physicsBody?.isDynamic = true
+            droplet.physicsBody?.affectedByGravity = false
+            droplet.physicsBody?.categoryBitMask = bitMasks.droplet.rawValue
+            droplet.physicsBody?.collisionBitMask = 0 //bitMasks.roof.rawValue
+            droplet.physicsBody?.contactTestBitMask = bitMasks.roof.rawValue
+            droplet.zPosition=1000
+            
+            self.addChild(droplet)
+            
+            //animate the banana and then shoot
+            let animationFrames: [SKTexture] = [
+                SKTexture(imageNamed: "tile010"),
+                SKTexture(imageNamed: "tile011"),
+                SKTexture(imageNamed: "tile012")
+            ]
+            
+            
+            let animationAction = SKAction.animate(with: animationFrames, timePerFrame: 0.1)
+            player.run(animationAction)
+            droplet.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 1.5))
+        }
     }
     
     private func startCoinSpawn() {
