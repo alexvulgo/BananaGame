@@ -5,6 +5,13 @@
 //  Created by Matthew Andrea D'Alessio on 15/12/23.
 //
 
+//
+//  GlowBorder.swift
+//  ArcadeGameTemplate
+//
+//  Created by Matthew Andrea D'Alessio on 15/12/23.
+//
+
 import SwiftUI
 
 struct GlowBorder: ViewModifier {
@@ -14,7 +21,7 @@ struct GlowBorder: ViewModifier {
     func body(content: Content) -> some View {
         applyShadow(content: AnyView(content), lineWidth: lineWidth)
     }
-    
+
     func applyShadow(content: AnyView, lineWidth: Int) -> AnyView {
         if lineWidth == 0 {
             return content

@@ -6,8 +6,22 @@
 import SwiftUI
 import SpriteKit
 
-struct ArcadeGameView: View {
+/**
+ * # ArcadeGameView
+ *   This view is responsible for presenting the game and the game UI.
+ *  In here you can add and customize:
+ *  - UI elements
+ *  - Different effects for transitions in and out of the game scene
+ **/
 
+struct ArcadeGameView: View {
+    
+    /**
+     * # The Game Logic
+     *     The game logic keeps track of the game variables
+     *   you can use it to display information on the SwiftUI view,
+     *   for example, and comunicate with the Game Scene.
+     **/
     @StateObject var gameLogic: ArcadeGameLogic =  ArcadeGameLogic.shared
     
     // The game state is used to transition between the different states of the game
@@ -40,21 +54,21 @@ struct ArcadeGameView: View {
             VStack {
                 HStack(){
                     
+
+                   Spacer()
                     
-                    Spacer()
-                    
-                    
+          
                     
                     GameScoreView(score: $gameLogic.currentScore)
                         .padding()
-                    
+                        
                 }
                 .padding()
                 .padding(.top, 40)
                 
                 
                 Spacer()
-                
+              
             }
         }
         .ignoresSafeArea()

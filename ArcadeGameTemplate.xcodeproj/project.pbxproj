@@ -19,8 +19,9 @@
 		271CB26E27D6A58A00615359 /* ArcadeGameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271CB26D27D6A58A00615359 /* ArcadeGameScene.swift */; };
 		271CB27027D74CAF00615359 /* GameDurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271CB26F27D74CAF00615359 /* GameDurationView.swift */; };
 		271CB27227D74CB900615359 /* GameScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271CB27127D74CB900615359 /* GameScoreView.swift */; };
-		3405B1FF2B2C435400B8A592 /* GlowBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3405B1FE2B2C435400B8A592 /* GlowBorder.swift */; };
+		349F3ECA2B2C5DED001BA333 /* GlowBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349F3EC92B2C5DED001BA333 /* GlowBorder.swift */; };
 		671C738C2B2B1F6700FA90F5 /* backgroundMusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 671C738B2B2B1F6700FA90F5 /* backgroundMusic.mp3 */; };
+		FA904C8C2B2C3FD50059C921 /* CreditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA904C8B2B2C3FD50059C921 /* CreditView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,8 +38,9 @@
 		271CB26D27D6A58A00615359 /* ArcadeGameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadeGameScene.swift; sourceTree = "<group>"; usesTabs = 0; };
 		271CB26F27D74CAF00615359 /* GameDurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDurationView.swift; sourceTree = "<group>"; };
 		271CB27127D74CB900615359 /* GameScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScoreView.swift; sourceTree = "<group>"; };
-		3405B1FE2B2C435400B8A592 /* GlowBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlowBorder.swift; sourceTree = "<group>"; };
+		349F3EC92B2C5DED001BA333 /* GlowBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlowBorder.swift; sourceTree = "<group>"; };
 		671C738B2B2B1F6700FA90F5 /* backgroundMusic.mp3 */ = {isa = PBXFileReference; explicitFileType = audio.mp3; name = backgroundMusic.mp3; path = ArcadeGameTemplate/backgroundMusic.mp3; sourceTree = "<group>"; };
+		FA904C8B2B2C3FD50059C921 /* CreditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 				271CB26D27D6A58A00615359 /* ArcadeGameScene.swift */,
 				271CB26F27D74CAF00615359 /* GameDurationView.swift */,
 				271CB27127D74CB900615359 /* GameScoreView.swift */,
+				FA904C8B2B2C3FD50059C921 /* CreditView.swift */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -123,8 +126,8 @@
 		27EA291327D91416005A20C0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				3405B1FE2B2C435400B8A592 /* GlowBorder.swift */,
 				271CB26A27D6659600615359 /* Constants.swift */,
+				349F3EC92B2C5DED001BA333 /* GlowBorder.swift */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -200,13 +203,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA904C8C2B2C3FD50059C921 /* CreditView.swift in Sources */,
 				271CB27027D74CAF00615359 /* GameDurationView.swift in Sources */,
 				271CB26E27D6A58A00615359 /* ArcadeGameScene.swift in Sources */,
 				271CB26127D656BA00615359 /* MainScreenView.swift in Sources */,
 				271CB25F27D656A800615359 /* ArcadeGameLogic.swift in Sources */,
 				271CB25327D6569700615359 /* ContentView.swift in Sources */,
+				349F3ECA2B2C5DED001BA333 /* GlowBorder.swift in Sources */,
 				271CB27227D74CB900615359 /* GameScoreView.swift in Sources */,
-				3405B1FF2B2C435400B8A592 /* GlowBorder.swift in Sources */,
 				271CB25127D6569700615359 /* ArcadeGameTemplateApp.swift in Sources */,
 				271CB26B27D6659600615359 /* Constants.swift in Sources */,
 				271CB26827D6570800615359 /* GameOverView.swift in Sources */,
@@ -343,7 +347,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ArcadeGameTemplate/Preview Content\"";
-				DEVELOPMENT_TEAM = X2YNJAUA67;
+				DEVELOPMENT_TEAM = J736YJDRJZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.arcade-games";
@@ -359,7 +363,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = AppleDeveloper.BananaGame;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fonztara1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -379,7 +383,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ArcadeGameTemplate/Preview Content\"";
-				DEVELOPMENT_TEAM = X2YNJAUA67;
+				DEVELOPMENT_TEAM = J736YJDRJZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.arcade-games";
@@ -395,7 +399,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = AppleDeveloper.BananaGame;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fonztara1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

@@ -7,7 +7,12 @@ import SpriteKit
 import SwiftUI
 
 class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
-
+    /**
+     * # The Game Logic
+     *     The game logic keeps track of the game variables
+     *   you can use it to display information on the SwiftUI view,
+     *   for example, and comunicate with the Game Scene.
+     **/
     var gameLogic: ArcadeGameLogic = ArcadeGameLogic.shared
     
     var player: SKSpriteNode = SKSpriteNode()
@@ -34,6 +39,9 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
     var dropletShootTimer: Timer?
     var coinSpawnTimer: Timer?
     
+   
+    
+  
     // Keeps track of when the last update happend.
     // Used to calculate how much time has passed between updates.
     var lastUpdate: TimeInterval = 0
@@ -71,15 +79,15 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
         
         let characterHalfWidth = player.size.width / 2
         
-        
+               
         let minX = characterHalfWidth
         let maxX = size.width - characterHalfWidth
-        
+       
         var characterX = player.position.x
         
-        
+               
         characterX = max(minX, min(characterX, maxX))
-        
+               
         player.position = CGPoint(x: characterX, y: player.position.y)
         
     }
@@ -117,7 +125,7 @@ extension ArcadeGameScene {
         self.rightBtn.position.x = (frame.size.width / 2) + 50
         self.rightBtn.position.y = 100
         self.rightBtn.zPosition = 100
-        
+       
         addChild(self.leftBtn)
         addChild(self.rightBtn)
         
@@ -273,7 +281,7 @@ extension ArcadeGameScene {
         
         let animationAction = SKAction.animate(with: animationFrames, timePerFrame: 0.5)
         let repeatAction = SKAction.repeatForever(animationAction)
-        
+
         // Run the animation on the sprite
         monkey.run(repeatAction)
     }
@@ -295,31 +303,31 @@ extension ArcadeGameScene {
         
     }
     
-    /* private func createMonkeys() {
-     self.monkey = SKSpriteNode(imageNamed: "monkey")
-     self.monkey.name = "monkey"
-     
-     self.monkey.size = CGSize(width: 32, height: 32)
-     self.monkey.position = CGPoint(x: frame.width/2, y: frame.height*2)
-     self.monkey.zPosition = 1000
-     
-     self.monkey.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: self.monkey.texture!.size().width, height: self.monkey.texture!.size().height))
-     self.monkey.physicsBody?.affectedByGravity = true
-     self.monkey.physicsBody?.isDynamic = true
-     self.monkey.physicsBody?.allowsRotation = false
-     
-     self.monkey.physicsBody?.categoryBitMask = bitMasks.monkey.rawValue
-     self.monkey.physicsBody?.contactTestBitMask = bitMasks.ground.rawValue
-     self.monkey.physicsBody?.contactTestBitMask = bitMasks.droplet.rawValue
-     self.monkey.physicsBody?.linearDamping = CGFloat.random(in: 3..<10)
-     
-     addChild(self.monkey)
-     
-     
-     }*/
+   /* private func createMonkeys() {
+        self.monkey = SKSpriteNode(imageNamed: "monkey")
+        self.monkey.name = "monkey"
+        
+        self.monkey.size = CGSize(width: 32, height: 32)
+        self.monkey.position = CGPoint(x: frame.width/2, y: frame.height*2)
+        self.monkey.zPosition = 1000
+        
+        self.monkey.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: self.monkey.texture!.size().width, height: self.monkey.texture!.size().height))
+        self.monkey.physicsBody?.affectedByGravity = true
+        self.monkey.physicsBody?.isDynamic = true
+        self.monkey.physicsBody?.allowsRotation = false
+    
+        self.monkey.physicsBody?.categoryBitMask = bitMasks.monkey.rawValue
+        self.monkey.physicsBody?.contactTestBitMask = bitMasks.ground.rawValue
+        self.monkey.physicsBody?.contactTestBitMask = bitMasks.droplet.rawValue
+        self.monkey.physicsBody?.linearDamping = CGFloat.random(in: 3..<10)
+        
+        addChild(self.monkey)
+        
+        
+    }*/
     
     func didBegin(_ contact: SKPhysicsContact) {
-        
+       
         if (contact.bodyA.categoryBitMask == bitMasks.droplet.rawValue || contact.bodyB.categoryBitMask == bitMasks.droplet.rawValue) && (contact.bodyA.categoryBitMask == bitMasks.monkey.rawValue || contact.bodyB.categoryBitMask == bitMasks.monkey.rawValue)   {
             if(contact.bodyA.categoryBitMask == bitMasks.monkey.rawValue){
                 self.monkeyDieAnimation(monkey: contact.bodyA.node! as! SKSpriteNode)
@@ -358,7 +366,7 @@ extension ArcadeGameScene {
             
             //self.gameLogic.decrementCounter()
             //if self.counter == 0 {
-            //self.finishGame()
+                //self.finishGame()
             self.gameOver()
             
         }
@@ -384,17 +392,17 @@ extension ArcadeGameScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         //MARK: DEFAULT CONTROLS
-        //        for touch in touches {
-        //            let touchLocation = touch.location(in: self)
-        //            let touchedNode = atPoint(touchLocation)
-        //            if touchedNode.name == "right" {
-        //                self.isMovingToTheLeft = false
-        //                self.isMovingToTheRight = true
-        //            } else if touchedNode.name == "left" {
-        //                self.isMovingToTheRight = false
-        //                self.isMovingToTheLeft = true
-        //            }
-        //        }
+//        for touch in touches {
+//            let touchLocation = touch.location(in: self)
+//            let touchedNode = atPoint(touchLocation)
+//            if touchedNode.name == "right" {
+//                self.isMovingToTheLeft = false
+//                self.isMovingToTheRight = true
+//            } else if touchedNode.name == "left" {
+//                self.isMovingToTheRight = false
+//                self.isMovingToTheLeft = true
+//            }
+//        }
         
         
         //MARK: PLAYER FOLLOWS FINGERS
@@ -409,16 +417,16 @@ extension ArcadeGameScene {
         
         
         //MARK: SMOOTH CONTROLS
-        //        guard let touch = touches.first else { return }
-        //        let touchLocation = touch.location(in: self)
-        //        let touchedNode = atPoint(touchLocation)
-        //        if touchedNode.name == "right" {
-        //            self.isMovingToTheLeft = false
-        //            self.isMovingToTheRight = true
-        //        } else if touchedNode.name == "left" {
-        //            self.isMovingToTheRight = false
-        //            self.isMovingToTheLeft = true
-        //        }
+//        guard let touch = touches.first else { return }
+//        let touchLocation = touch.location(in: self)
+//        let touchedNode = atPoint(touchLocation)
+//        if touchedNode.name == "right" {
+//            self.isMovingToTheLeft = false
+//            self.isMovingToTheRight = true
+//        } else if touchedNode.name == "left" {
+//            self.isMovingToTheRight = false
+//            self.isMovingToTheLeft = true
+//        }
         
         //MARK: PLAYER FOLLOWS FINGERS
         for touch in touches {
@@ -446,10 +454,10 @@ extension ArcadeGameScene {
             SKTexture(imageNamed: "tile008")
         ]
         
-        let animationAction = SKAction.animate(with: animationFrames, timePerFrame: 0.1)
-        self.player.run(animationAction)
-        let moveAction = SKAction.moveBy(x: -5, y: 0, duration: 0.1)
-        self.player.run(moveAction)
+            let animationAction = SKAction.animate(with: animationFrames, timePerFrame: 0.1)
+            self.player.run(animationAction)
+            let moveAction = SKAction.moveBy(x: -5, y: 0, duration: 0.1)
+            self.player.run(moveAction)
     }
     
     private func moveRight() {
@@ -460,10 +468,10 @@ extension ArcadeGameScene {
             SKTexture(imageNamed: "tile008")
         ]
         
-        let animationAction = SKAction.animate(with: animationFrames, timePerFrame: 0.1)
-        self.player.run(animationAction)
-        let moveAction = SKAction.moveBy(x: 5, y: 0, duration: 0.1)
-        self.player.run(moveAction)
+            let animationAction = SKAction.animate(with: animationFrames, timePerFrame: 0.1)
+            self.player.run(animationAction)
+            let moveAction = SKAction.moveBy(x: 5, y: 0, duration: 0.1)
+            self.player.run(moveAction)
     }
 }
 
@@ -534,20 +542,20 @@ extension ArcadeGameScene {
     }
     
     /*private func shoot() {
-     let droplet = SKShapeNode(circleOfRadius: 5.0)
-     droplet.zPosition = 1
-     droplet.position = CGPoint(x: player.position.x, y: player.position.y + (player.size.height / 2) + 1)
-     droplet.fillColor = SKColor.white
-     
-     droplet.physicsBody = SKPhysicsBody(circleOfRadius: 5.0)
-     droplet.physicsBody?.isDynamic = true
-     droplet.physicsBody?.affectedByGravity = false
-     droplet.physicsBody?.categoryBitMask = bitMasks.droplet.rawValue
-     
-     self.addChild(droplet)
-     
-     droplet.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 2))
-     }*/
+        let droplet = SKShapeNode(circleOfRadius: 5.0)
+        droplet.zPosition = 1
+        droplet.position = CGPoint(x: player.position.x, y: player.position.y + (player.size.height / 2) + 1)
+        droplet.fillColor = SKColor.white
+        
+        droplet.physicsBody = SKPhysicsBody(circleOfRadius: 5.0)
+        droplet.physicsBody?.isDynamic = true
+        droplet.physicsBody?.affectedByGravity = false
+        droplet.physicsBody?.categoryBitMask = bitMasks.droplet.rawValue
+        
+        self.addChild(droplet)
+        
+        droplet.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 2))
+    }*/
     
 }
 

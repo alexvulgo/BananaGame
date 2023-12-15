@@ -14,34 +14,29 @@ struct GameOverView: View {
             Color.white
                 .ignoresSafeArea()
             
-            VStack {
+            VStack (alignment: .center) {
+                
                 Text ("Game Over")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(.accentColor)
-                    .padding(.bottom, 50)
                     .glowBorder(color: Color("mybrown"), lineWidth: 5)
+                    .padding(.bottom, 40)
                 
                 Image ("monkeyeats")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 336, height: 336)
-                    .clipped()
-                    .padding(.bottom, 50)
+                    .padding(.bottom, 20)
                 
-                HStack(alignment: .center) {
-                    Button {
-                        withAnimation { self.backToMainScreen() }
-                    } label: {
-                        Image("left")
-                            .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 45, height: 45)
-                                    .scaleEffect(1.5)
-                    }
+                Button {
+                    withAnimation { self.backToMainScreen() }
+                } label: {
+                    Image("left")
+                        .resizable()
+                        .frame(width: 65, height: 65)
                 }
             }
-            
         }
         .statusBar(hidden: true)
     }
