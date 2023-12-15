@@ -38,6 +38,9 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
     var monkeyGenerationTimer: Timer?
     var dropletShootTimer: Timer?
     var coinSpawnTimer: Timer?
+    
+   
+    
   
     // Keeps track of when the last update happend.
     // Used to calculate how much time has passed between updates.
