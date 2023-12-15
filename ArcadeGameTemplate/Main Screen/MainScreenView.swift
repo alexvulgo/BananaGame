@@ -26,56 +26,58 @@ struct MainScreenView: View {
     let accentColor: Color = MainScreenProperties.accentColor
     
     var body: some View {
-        VStack(alignment: .center, spacing: 16.0) {
-            
-            Spacer()
-            /**
-             * # PRO TIP!
-             * The game title can be customized to represent the visual identity of the game
-             */
-            //Text("\(self.gameTitle)")
-               // .font(.title)
-                //.fontWeight(.bold)
-               // .foregroundStyle(Color(UIColor.black))
-            
-            
-            
-            /**
-             * Customize the appearance of the **Insert a Coin** button to match the visual identity of your game
-             */
-            Button {
-                withAnimation { self.startGame() }
-            } label: {
-                Text("Play")
-                    .padding()
-                    .frame(maxWidth: 300)
-            }
-            
+        NavigationStack {
+            VStack(alignment: .center, spacing: 16.0) {
+                
+                Spacer()
+                /**
+                 * # PRO TIP!
+                 * The game title can be customized to represent the visual identity of the game
+                 */
+                Text("\(self.gameTitle)")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundStyle(Color(UIColor.black))
+                
+                
+                
+                /**
+                 * Customize the appearance of the **Insert a Coin** button to match the visual identity of your game
+                 */
+                Button {
+                    withAnimation { self.startGame() }
+                } label: {
+                    Text("Play")
+                        .padding()
+                        .frame(maxWidth: 300)
+                }
+                
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .foregroundColor(.accentColor)
                 .glowBorder(color: Color("mybrown"), lineWidth: 5)
                 .padding(.bottom, 40)
-            
-            
-            
-            Button {
-                withAnimation { self.startGame() }
-            } label: {
-                Text("Credits")
-                    .padding()
-                    .frame(maxWidth: 300)
-            }
+                
+                NavigationLink(destination: {
+                    CreditView()
+                }, label: {
+                    Text("Credits")
+                        .padding()
+                        .frame(maxWidth: 300)
+                })
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .foregroundColor(.accentColor)
                 .glowBorder(color: Color("mybrown"), lineWidth: 5)
                 .padding(.bottom, 40)
-            
-            Spacer()
-        }.foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
-        .padding()
-        .statusBar(hidden: true)
+                
+                
+                Spacer()
+            }
+            .foregroundColor(.blue)
+            .padding()
+            .statusBar(hidden: true)
+        }
     }
     
     /**

@@ -9,15 +9,15 @@ import SwiftUI
 
 struct CreditView: View {
     
-    let loadData = UserDefaults.standard
+    let highScore = UserDefaults.standard.integer(forKey: "highScore")
     
     var body: some View {
         VStack(alignment: .leading){
             Text("HIGH SCORES")
                 .font(.title)
                 .bold()
+            Text("\(highScore)")
             
-           
         }
     }
 }
