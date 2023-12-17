@@ -35,11 +35,11 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
     /* var rightBtn: SKSpriteNode!
      var leftBtn: SKSpriteNode!*/
     
-    var monkeyGenerationTimer: Timer?
+    var monkeyGenerationTimer: [Timer] = []
     var dropletShootTimer: Timer?
     var coinSpawnTimer: Timer?
     
-    
+    var monkeysSpawn = 0
     // Keeps track of when the last update happend.
     // Used to calculate how much time has passed between updates.
     var lastUpdate: TimeInterval = 0
@@ -88,6 +88,15 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
         
         player.position = CGPoint(x: characterX, y: player.position.y)
         
+        
+        if gameLogic.isPaused {
+            self.isPaused = true
+            dropletShootTimer?.invalidate()
+            for timer in monkeyGenerationTimer {
+                timer.invalidate()
+            }
+        }
+
     }
     
 }
@@ -103,8 +112,8 @@ extension ArcadeGameScene {
         self.setUpMusic()
         self.createPlayer(at: CGPoint(x: frame.size.width / 2, y: frame.size.height / 2))
         //self.setUpButtons()
-        self.startMonkeyGeneration()
         self.startDropletShoot()
+        self.startMonkeyGeneration()
         self.startCoinSpawn()
         self.setupLife()
     }
@@ -249,13 +258,17 @@ extension ArcadeGameScene {
     }
     
     private func startMonkeyGeneration() {
-        monkeyGenerationTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(createMonkeys), userInfo: nil, repeats: true)
+        let timer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(createMonkeys), userInfo: nil, repeats: true)
+        
+        monkeyGenerationTimer.append(timer)
+        
+        monkeysSpawn += 1
     }
     
     @objc private func createMonkeys() {
         let animationFrames: [SKTexture] = [
             SKTexture(imageNamed: "monkey1"),
-            SKTexture(imageNamed: "monkey2")
+           SKTexture(imageNamed: "monkey2")
         ]
         
         let monkey = SKSpriteNode(texture: animationFrames[0])
@@ -273,7 +286,7 @@ extension ArcadeGameScene {
         monkey.physicsBody?.categoryBitMask = bitMasks.monkey.rawValue
         monkey.physicsBody?.contactTestBitMask = (bitMasks.ground.rawValue | bitMasks.droplet.rawValue | bitMasks.banana.rawValue)
         monkey.physicsBody?.collisionBitMask = 0
-        monkey.physicsBody?.linearDamping = CGFloat.random(in: 3..<10)
+        monkey.physicsBody?.linearDamping = 8//CGFloat.random(in: 3..<10)
         
         addChild(monkey)
         
@@ -298,7 +311,7 @@ extension ArcadeGameScene {
         let dieAction = SKAction.removeFromParent()
         let deadSequence = SKAction.sequence([animationAction,dieAction])
         monkey.run(deadSequence)
-        
+    
     }
     
     /* private func createMonkeys() {
@@ -328,6 +341,7 @@ extension ArcadeGameScene {
         
         if (contact.bodyA.categoryBitMask == bitMasks.droplet.rawValue || contact.bodyB.categoryBitMask == bitMasks.droplet.rawValue) && (contact.bodyA.categoryBitMask == bitMasks.monkey.rawValue || contact.bodyB.categoryBitMask == bitMasks.monkey.rawValue)   {
             if(contact.bodyA.categoryBitMask == bitMasks.monkey.rawValue){
+                
                 self.monkeyDieAnimation(monkey: contact.bodyA.node! as! SKSpriteNode)
                 contact.bodyB.node?.removeFromParent()
                 
@@ -337,10 +351,19 @@ extension ArcadeGameScene {
                 contact.bodyA.node?.removeFromParent()
             }
             self.gameLogic.score(points: 5)
+            
+            if(self.gameLogic.currentScore % (200*monkeysSpawn) == 0) {
+                startMonkeyGeneration()
+                startDropletShoot()
+            }
         }
         
         if (contact.bodyA.categoryBitMask == bitMasks.coin.rawValue || contact.bodyB.categoryBitMask == bitMasks.coin.rawValue) && (contact.bodyA.categoryBitMask == bitMasks.banana.rawValue || contact.bodyB.categoryBitMask == bitMasks.banana.rawValue)   {
             self.gameLogic.score(points: 10)
+            if(self.gameLogic.currentScore % (200*monkeysSpawn) == 0) {
+                startMonkeyGeneration()
+                startDropletShoot()
+            }
         }
         
         if (contact.bodyA.categoryBitMask == bitMasks.roof.rawValue || contact.bodyB.categoryBitMask == bitMasks.roof.rawValue) && (contact.bodyA.categoryBitMask == bitMasks.droplet.rawValue || contact.bodyB.categoryBitMask == bitMasks.droplet.rawValue)   {
@@ -404,11 +427,12 @@ extension ArcadeGameScene {
         
         
         //MARK: PLAYER FOLLOWS FINGERS
-        for touch in touches {
-            let touchLocation = touch.location(in: self)
-            player.position.x = touchLocation.x
+        if !self.isPaused {
+            for touch in touches {
+                let touchLocation = touch.location(in: self)
+                player.position.x = touchLocation.x
+            }
         }
-        
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -427,18 +451,20 @@ extension ArcadeGameScene {
         //        }
         
         //MARK: PLAYER FOLLOWS FINGERS
-        for touch in touches {
-            let touchLocation = touch.location(in: self)
-            player.position.x = touchLocation.x
+        if !self.isPaused {
+            for touch in touches {
+                let touchLocation = touch.location(in: self)
+                player.position.x = touchLocation.x
+            }
         }
-        
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.isMovingToTheRight = false
-        self.isMovingToTheLeft = false
+        if !self.isPaused {
+            self.isMovingToTheRight = false
+            self.isMovingToTheLeft = false
+        }
     }
-    
 }
 
 // MARK: - Player Movement
@@ -477,17 +503,20 @@ extension ArcadeGameScene {
 extension ArcadeGameScene {
     
     private func startDropletShoot() {
-        dropletShootTimer = Timer.scheduledTimer(timeInterval: 0.6, target: self, selector: #selector(shoot), userInfo: nil, repeats: true)
+        dropletShootTimer?.invalidate()
+        dropletShootTimer = Timer.scheduledTimer(timeInterval: 1-(0.1*Double(monkeysSpawn)), target: self, selector: #selector(shoot), userInfo: nil, repeats: true)
     }
     
     @objc private func shoot() {
-        for i in 1..<4 {
-            let droplet = SKShapeNode(circleOfRadius: 3.0)
+          
+            let droplet = SKShapeNode(circleOfRadius: 5.0)
             
-            droplet.position = CGPoint(x: player.position.x, y: player.position.y + (player.size.height / 2) + CGFloat(i))
+            droplet.position = CGPoint(x: player.position.x, y: player.position.y + (player.size.height / 2) + 1)
+        
             droplet.fillColor = SKColor.white
             
-            droplet.physicsBody = SKPhysicsBody(circleOfRadius: 5.0)
+            droplet.physicsBody = SKPhysicsBody(circleOfRadius: 6.0)
+        
             droplet.physicsBody?.isDynamic = true
             droplet.physicsBody?.affectedByGravity = false
             droplet.physicsBody?.categoryBitMask = bitMasks.droplet.rawValue
@@ -507,9 +536,9 @@ extension ArcadeGameScene {
             
             let animationAction = SKAction.animate(with: animationFrames, timePerFrame: 0.1)
             player.run(animationAction)
-            droplet.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 1.5))
+            droplet.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 2))
         }
-    }
+    
     
     private func startCoinSpawn() {
         coinSpawnTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(createCoins), userInfo: nil, repeats: true)

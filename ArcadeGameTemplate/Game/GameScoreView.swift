@@ -14,16 +14,18 @@ import SwiftUI
 
 struct GameScoreView: View {
     @Binding var score: Int
-    
+
     var body: some View {
         
-        HStack {
-
+        HStack{
+            
+            Spacer()
+            
             Text("\(score)")
                 .font(.title)
-                
+            
         }
-        .frame(maxWidth: 100)
+        .frame(maxWidth: 200)
         .padding(24)
         .foregroundColor(.white)
         //.background(Color(.systemYellow))
@@ -32,7 +34,8 @@ struct GameScoreView: View {
 }
 
 #Preview {
-    GameScoreView(score: .constant(100))
+    GameScoreView(score: .constant(100)
+)
         .previewLayout(.fixed(width: 300, height: 100))
 }
 
