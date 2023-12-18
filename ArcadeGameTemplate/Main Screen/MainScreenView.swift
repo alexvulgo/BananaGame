@@ -32,56 +32,51 @@ struct MainScreenView: View {
                 Color.white
                     .ignoresSafeArea()
                 
-                VStack(alignment: .center, spacing: 16.0) {
+                VStack(alignment: .center) {
                     
                     Spacer()
-                    /**
-                     * # PRO TIP!
-                     * The game title can be customized to represent the visual identity of the game
-                     */
-                    Text("\(self.gameTitle)")
-                        .font(.system(size: 45))
-                        .fontWeight(.bold)
-                        .foregroundColor(.accentColor)
-                        .glowBorder(color: Color("mybrown"), lineWidth: 5)
-                        .padding(.bottom, 40)
                     
-                    
-                    
-                    /**
-                     * Customize the appearance of the **Insert a Coin** button to match the visual identity of your game
-                     */
+                    Image ("bananariot")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 336, height: 336)
+                        .padding(.bottom, 50)
+
                     Button {
                         withAnimation { self.startGame() }
                     } label: {
-                        Text("Play")
+                        Text("PLAY")
                             .padding()
-                            .frame(maxWidth: 300)
+                            .frame(maxWidth: 150)
+                            .background(accentColor)
+                            .cornerRadius(10)
                     }
-                    
-                    .font(.largeTitle)
+
+                    .font(.title2)
                     .fontWeight(.bold)
-                    .foregroundColor(.accentColor)
+                    .foregroundColor(Color("mybrown"))
                     .glowBorder(color: Color("mybrown"), lineWidth: 5)
-                    .padding(.bottom, 5)
-                    
+                    .padding(.bottom, 20)
+
+
                     NavigationLink(destination: {
                         CreditView()
                     }, label: {
-                        Text("Score")
+                        Text("SCORE")
                             .padding()
-                            .frame(maxWidth: 300)
+                            .frame(maxWidth: 150)
+                            .background(accentColor)
+                            .cornerRadius(10)
                     })
-                    .font(.largeTitle)
+
+                    .font(.title2)
                     .fontWeight(.bold)
-                    .foregroundColor(.accentColor)
+                    .foregroundColor(Color("mybrown"))
                     .glowBorder(color: Color("mybrown"), lineWidth: 5)
                     .padding(.bottom, 40)
-                    
-                    
+
                     Spacer()
                 }
-                .foregroundColor(.blue)
                 .padding()
                 .statusBar(hidden: true)
             }
