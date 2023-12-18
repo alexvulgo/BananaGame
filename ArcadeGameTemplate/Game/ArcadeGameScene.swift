@@ -45,6 +45,11 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
     // Used to calculate how much time has passed between updates.
     var lastUpdate: TimeInterval = 0
     
+    var isMusicOn : Bool = true
+    
+    var muteButton : SKSpriteNode = SKSpriteNode()
+    var pauseButton : SKSpriteNode = SKSpriteNode()
+    
     enum bitMasks :UInt32 {
         case banana = 0b1
         case ground = 0b10
@@ -102,6 +107,7 @@ extension ArcadeGameScene {
         self.setUpFloor()
         self.setUpRoof()
         self.setUpMusic()
+        self.setUpPause()
         self.createPlayer(at: CGPoint(x: frame.size.width / 2, y: frame.size.height / 2))
         //self.setUpButtons()
         self.startDropletShoot()
@@ -173,12 +179,31 @@ extension ArcadeGameScene {
     }
     
     private func setUpMusic() {
+        
+        let texture =  SKTexture(imageNamed: "volume")
+        muteButton = SKSpriteNode(texture: texture)
+        muteButton.size = CGSize(width: 25, height: 25)
+        muteButton.position = CGPoint(x: frame.size.width - 60, y: frame.size.height/11)
+        muteButton.zPosition = 1000
+        addChild(muteButton)
+        
         if let musicURL = Bundle.main.url(forResource: "backgroundMusic", withExtension: "mp3") {
             backgroundMusic = SKAudioNode(url: musicURL)
             addChild(backgroundMusic)
         }
-        
+            
         backgroundMusic.run(SKAction.play())
+
+    }
+    
+    private func setUpPause() {
+        
+        let texture =  SKTexture(imageNamed: "pause")
+        pauseButton = SKSpriteNode(texture: texture)
+        pauseButton.size = CGSize(width: 25, height: 25)
+        pauseButton.position = CGPoint(x: frame.size.width - 60, y: frame.size.height - 60)
+        pauseButton.zPosition = 1000
+        addChild(pauseButton)
     }
     
     private func setUpBg() {
@@ -235,9 +260,6 @@ extension ArcadeGameScene {
             self.finishGame()
         }
     }
-    
-    
-    
     
     private func setUpPhysicsWorld() {
         // TODO: Customize!
@@ -305,29 +327,6 @@ extension ArcadeGameScene {
         monkey.run(deadSequence)
     
     }
-    
-    /* private func createMonkeys() {
-     self.monkey = SKSpriteNode(imageNamed: "monkey")
-     self.monkey.name = "monkey"
-     
-     self.monkey.size = CGSize(width: 32, height: 32)
-     self.monkey.position = CGPoint(x: frame.width/2, y: frame.height*2)
-     self.monkey.zPosition = 1000
-     
-     self.monkey.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: self.monkey.texture!.size().width, height: self.monkey.texture!.size().height))
-     self.monkey.physicsBody?.affectedByGravity = true
-     self.monkey.physicsBody?.isDynamic = true
-     self.monkey.physicsBody?.allowsRotation = false
-     
-     self.monkey.physicsBody?.categoryBitMask = bitMasks.monkey.rawValue
-     self.monkey.physicsBody?.contactTestBitMask = bitMasks.ground.rawValue
-     self.monkey.physicsBody?.contactTestBitMask = bitMasks.droplet.rawValue
-     self.monkey.physicsBody?.linearDamping = CGFloat.random(in: 3..<10)
-     
-     addChild(self.monkey)
-     
-     
-     }*/
     
     func didBegin(_ contact: SKPhysicsContact) {
         
@@ -404,43 +403,78 @@ extension ArcadeGameScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        //MARK: DEFAULT CONTROLS
-        //        for touch in touches {
-        //            let touchLocation = touch.location(in: self)
-        //            let touchedNode = atPoint(touchLocation)
-        //            if touchedNode.name == "right" {
-        //                self.isMovingToTheLeft = false
-        //                self.isMovingToTheRight = true
-        //            } else if touchedNode.name == "left" {
-        //                self.isMovingToTheRight = false
-        //                self.isMovingToTheLeft = true
-        //            }
-        //        }
-        
-        
         //MARK: PLAYER FOLLOWS FINGERS
         if !self.isPaused {
             for touch in touches {
                 let touchLocation = touch.location(in: self)
-                player.position.x = touchLocation.x
+                
+                //if the user press of the pause button, isPaused become true
+                if (touchLocation.x < frame.size.width  - 47.5 && touchLocation.x > frame.size.width - 72.5 && touchLocation.y < frame.size.height - 47.5  && touchLocation.y > frame.size.height - 72.5) {
+                    self.isPaused = true
+                    let newTexture = SKTexture(imageNamed: "play")
+                    pauseButton.texture = newTexture
+                    for timer in monkeyGenerationTimer {
+                        timer.invalidate()
+                    }
+                    dropletShootTimer?.invalidate()
+                    dropletShootTimer?.invalidate()
+                }
+                else if (touchLocation.x < frame.size.width  - 47.5 && touchLocation.x > frame.size.width - 72.5 && touchLocation.y > frame.size.height/11 - 12.5  && touchLocation.y < frame.size.height/11 + 12.5){
+                    if isMusicOn {
+                        isMusicOn = false
+                        let newTexture = SKTexture(imageNamed: "novolume")
+                        muteButton.texture = newTexture
+                        backgroundMusic.run(SKAction.stop())
+                    }
+                    else {
+                        isMusicOn = true
+                        let newTexture = SKTexture(imageNamed: "volume")
+                        muteButton.texture = newTexture
+                        backgroundMusic.run(SKAction.play())
+                    }
+                }
+                else {
+                    player.position.x = touchLocation.x
+                }
+            }
+        }
+        else {
+            for touch in touches {
+                let touchLocation = touch.location(in: self)
+                
+                //if the user press of the pause button, isPaused become true
+                if (touchLocation.x < frame.size.width  - 47.5 && touchLocation.x > frame.size.width - 72.5 && touchLocation.y < frame.size.height - 47.5  && touchLocation.y > frame.size.height - 72.5) {
+                    monkeyGenerationTimer.removeAll()
+                    let temp = monkeysSpawn
+                    monkeysSpawn = 0
+                    for _ in 0..<temp {
+                        startMonkeyGeneration()
+                    }
+                    startDropletShoot()
+                    self.isPaused = false
+                    let newTexture = SKTexture(imageNamed: "pause")
+                    pauseButton.texture = newTexture
+                }
+                else if (touchLocation.x < frame.size.width  - 47.5 && touchLocation.x > frame.size.width - 72.5 && touchLocation.y > frame.size.height/11 - 12.5  && touchLocation.y < frame.size.height/11 + 12.5){
+                    if isMusicOn {
+                        isMusicOn = false
+                        let newTexture = SKTexture(imageNamed: "novolume")
+                        muteButton.texture = newTexture
+                        backgroundMusic.run(SKAction.stop())
+                    }
+                    else {
+                        isMusicOn = true
+                        let newTexture = SKTexture(imageNamed: "volume")
+                        muteButton.texture = newTexture
+                        backgroundMusic.run(SKAction.play())
+                    }
+                }
             }
         }
     }
+
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-        
-        //MARK: SMOOTH CONTROLS
-        //        guard let touch = touches.first else { return }
-        //        let touchLocation = touch.location(in: self)
-        //        let touchedNode = atPoint(touchLocation)
-        //        if touchedNode.name == "right" {
-        //            self.isMovingToTheLeft = false
-        //            self.isMovingToTheRight = true
-        //        } else if touchedNode.name == "left" {
-        //            self.isMovingToTheRight = false
-        //            self.isMovingToTheLeft = true
-        //        }
         
         //MARK: PLAYER FOLLOWS FINGERS
         if !self.isPaused {
