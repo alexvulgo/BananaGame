@@ -593,16 +593,6 @@ extension ArcadeGameScene {
         
         self.addChild(droplet)
         
-        //animate the banana and then shoot
-        let animationFrames: [SKTexture] = [
-            SKTexture(imageNamed: "tile010"),
-            SKTexture(imageNamed: "tile011"),
-            SKTexture(imageNamed: "tile012")
-        ]
-        
-        
-        let animationAction = SKAction.animate(with: animationFrames, timePerFrame: 0.1)
-        player.run(animationAction)
         droplet.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 2))
     }
     
