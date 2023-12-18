@@ -670,7 +670,7 @@ extension ArcadeGameScene {
     
     
     @objc private func createPower() {
-        let power = SKSpriteNode(imageNamed: "banana222")
+        let power = SKSpriteNode(imageNamed: "bananaPower")
         power.name = "coin"
         
         power.size = CGSize(width: 32, height: 32)
