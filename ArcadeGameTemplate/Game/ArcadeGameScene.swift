@@ -125,26 +125,7 @@ extension ArcadeGameScene {
         self.startPowerSpawn()
         self.setupLife()
     }
-    
-    /* private func setUpButtons() {
-     self.leftBtn = SKSpriteNode(imageNamed: "left")
-     self.leftBtn.name = "left"
-     self.leftBtn.size = CGSize(width: 50, height: 50)
-     self.leftBtn.position.x = (frame.size.width / 2) - 50
-     self.leftBtn.position.y = 100
-     self.leftBtn.zPosition = 100
-     
-     self.rightBtn = SKSpriteNode(imageNamed: "right")
-     self.rightBtn.name = "right"
-     self.rightBtn.size = CGSize(width: 50, height: 50)
-     self.rightBtn.position.x = (frame.size.width / 2) + 50
-     self.rightBtn.position.y = 100
-     self.rightBtn.zPosition = 100
-     
-     addChild(self.leftBtn)
-     addChild(self.rightBtn)
-     
-     }*/
+
     
     private func createPlayer(at position: CGPoint) {
         self.player = SKSpriteNode(imageNamed: "tile000")
@@ -163,7 +144,7 @@ extension ArcadeGameScene {
     }
     
     private func setUpFloor() {
-        floor.position = CGPoint(x: frame.size.width / 2, y: (frame.size.height / 6))
+        floor.position = CGPoint(x: frame.size.width / 2, y: (frame.size.height / 7))
         floor.size = CGSize(width: frame.size.width, height: (frame.size.height / 5) + 15)
         floor.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: frame.size.width, height: 100))
         floor.physicsBody?.affectedByGravity = false
