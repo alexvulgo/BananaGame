@@ -497,6 +497,10 @@ extension ArcadeGameScene {
                     self.isPaused = false
                     let newTexture = SKTexture(imageNamed: "pause")
                     pauseButton.texture = newTexture
+                    
+                    if !isMusicOn{
+                        backgroundMusic.run(SKAction.stop())
+                    }
                 }
                 else if (touchLocation.x < frame.size.width  - 47.5 && touchLocation.x > frame.size.width - 72.5 && touchLocation.y > frame.size.height/11 - 12.5  && touchLocation.y < frame.size.height/11 + 12.5){
                     if isMusicOn {
