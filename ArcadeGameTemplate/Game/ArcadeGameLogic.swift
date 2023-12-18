@@ -16,12 +16,10 @@ class ArcadeGameLogic: ObservableObject {
     func setUpGame() {
         
         // TODO: Customize!
-        self.isPaused = false
         self.currentScore = 0
         self.sessionDuration = 0
         self.counter = 3
         self.isGameOver = false
-        
         
     }
     
@@ -77,14 +75,6 @@ class ArcadeGameLogic: ObservableObject {
     
     func decrementCounter() {
         counter -= 1
-    }
-    
-    @Published var  isPaused : Bool = false
-    
-    func pauseGame() {
-        if !isPaused {
-            isPaused = true
-        }
     }
     
 }

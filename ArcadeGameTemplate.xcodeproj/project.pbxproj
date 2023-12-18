@@ -20,7 +20,6 @@
 		271CB27027D74CAF00615359 /* GameDurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271CB26F27D74CAF00615359 /* GameDurationView.swift */; };
 		271CB27227D74CB900615359 /* GameScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271CB27127D74CB900615359 /* GameScoreView.swift */; };
 		349F3ECA2B2C5DED001BA333 /* GlowBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349F3EC92B2C5DED001BA333 /* GlowBorder.swift */; };
-		67004BD52B2F8F9A003911C2 /* PauseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67004BD42B2F8F9A003911C2 /* PauseView.swift */; };
 		671C738C2B2B1F6700FA90F5 /* backgroundMusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 671C738B2B2B1F6700FA90F5 /* backgroundMusic.mp3 */; };
 		FA904C8C2B2C3FD50059C921 /* CreditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA904C8B2B2C3FD50059C921 /* CreditView.swift */; };
 /* End PBXBuildFile section */
@@ -40,7 +39,6 @@
 		271CB26F27D74CAF00615359 /* GameDurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDurationView.swift; sourceTree = "<group>"; };
 		271CB27127D74CB900615359 /* GameScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScoreView.swift; sourceTree = "<group>"; };
 		349F3EC92B2C5DED001BA333 /* GlowBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlowBorder.swift; sourceTree = "<group>"; };
-		67004BD42B2F8F9A003911C2 /* PauseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseView.swift; sourceTree = "<group>"; };
 		671C738B2B2B1F6700FA90F5 /* backgroundMusic.mp3 */ = {isa = PBXFileReference; explicitFileType = audio.mp3; name = backgroundMusic.mp3; path = ArcadeGameTemplate/backgroundMusic.mp3; sourceTree = "<group>"; };
 		FA904C8B2B2C3FD50059C921 /* CreditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -103,7 +101,6 @@
 				271CB26227D656C100615359 /* ArcadeGameView.swift */,
 				271CB26D27D6A58A00615359 /* ArcadeGameScene.swift */,
 				271CB26F27D74CAF00615359 /* GameDurationView.swift */,
-				67004BD42B2F8F9A003911C2 /* PauseView.swift */,
 				271CB27127D74CB900615359 /* GameScoreView.swift */,
 				FA904C8B2B2C3FD50059C921 /* CreditView.swift */,
 			);
@@ -210,7 +207,6 @@
 				271CB27027D74CAF00615359 /* GameDurationView.swift in Sources */,
 				271CB26E27D6A58A00615359 /* ArcadeGameScene.swift in Sources */,
 				271CB26127D656BA00615359 /* MainScreenView.swift in Sources */,
-				67004BD52B2F8F9A003911C2 /* PauseView.swift in Sources */,
 				271CB25F27D656A800615359 /* ArcadeGameLogic.swift in Sources */,
 				271CB25327D6569700615359 /* ContentView.swift in Sources */,
 				349F3ECA2B2C5DED001BA333 /* GlowBorder.swift in Sources */,

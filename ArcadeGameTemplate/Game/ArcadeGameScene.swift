@@ -39,6 +39,7 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
     var dropletShootTimer: Timer?
     var coinSpawnTimer: Timer?
     
+    //Counter that keeps track of the iterations
     var monkeysSpawn = 0
     // Keeps track of when the last update happend.
     // Used to calculate how much time has passed between updates.
@@ -87,15 +88,6 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
         characterX = max(minX, min(characterX, maxX))
         
         player.position = CGPoint(x: characterX, y: player.position.y)
-        
-        
-        if gameLogic.isPaused {
-            self.isPaused = true
-            dropletShootTimer?.invalidate()
-            for timer in monkeyGenerationTimer {
-                timer.invalidate()
-            }
-        }
 
     }
     
@@ -504,7 +496,7 @@ extension ArcadeGameScene {
     
     private func startDropletShoot() {
         dropletShootTimer?.invalidate()
-        dropletShootTimer = Timer.scheduledTimer(timeInterval: 1-(0.1*Double(monkeysSpawn)), target: self, selector: #selector(shoot), userInfo: nil, repeats: true)
+        dropletShootTimer = Timer.scheduledTimer(timeInterval: 0.8, target: self, selector: #selector(shoot), userInfo: nil, repeats: true)
     }
     
     @objc private func shoot() {

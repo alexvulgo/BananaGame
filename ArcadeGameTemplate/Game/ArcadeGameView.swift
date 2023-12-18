@@ -55,17 +55,9 @@ struct ArcadeGameView: View {
                 
                 HStack(){
                     
-                    
-                    
                    Spacer()
             
                     GameScoreView(score: $gameLogic.currentScore)
-                        .padding()
-                    
-                    Spacer()
-                    
-                    Button("", systemImage: "pause.circle", action: {gameLogic.pauseGame()})
-                        .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                         .padding()
                 
                 }
