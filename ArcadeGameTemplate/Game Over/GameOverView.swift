@@ -9,7 +9,8 @@ struct GameOverView: View {
     
    
     @Binding var currentGameState: GameState
-    
+    let highScore = UserDefaults.standard.integer(forKey: "highScore")
+
     
     var body: some View {
         ZStack {
@@ -18,13 +19,24 @@ struct GameOverView: View {
             
             VStack (alignment: .center) {
                 
-                Text ("Game Over")
-                    .font(.largeTitle)
+                Text ("GAME OVER")
+                    .font(.system(size: 45))
                     .fontWeight(.bold)
                     .foregroundColor(.accentColor)
                     .glowBorder(color: Color("mybrown"), lineWidth: 5)
                     .padding(.bottom, 40)
                 
+                Text("HIGH SCORE")
+                    .font(.system(size: 20))
+                    .fontWeight(.bold)
+                    .foregroundColor(.accentColor)
+                    .glowBorder(color: Color("mybrown"), lineWidth: 5)
+                    .padding(.bottom, 5)
+                Text("\(highScore)")
+                    .font(.system(size: 20))
+                    .fontWeight(.bold)
+                    .foregroundColor(.accentColor)
+                    .glowBorder(color: Color("mybrown"), lineWidth: 5)
                 
                 Image ("monkeyeats")
                     .resizable()
