@@ -29,6 +29,7 @@ struct CreditView: View {
                     .foregroundColor(.accentColor)
                     .glowBorder(color: Color("mybrown"), lineWidth: 5)
             }
+            .statusBar(hidden: true)
         }
     }
 }
