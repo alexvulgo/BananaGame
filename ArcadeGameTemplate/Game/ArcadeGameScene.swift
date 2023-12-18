@@ -193,7 +193,7 @@ extension ArcadeGameScene {
         let texture =  SKTexture(imageNamed: "volume")
         muteButton = SKSpriteNode(texture: texture)
         muteButton.size = CGSize(width: 25, height: 25)
-        muteButton.position = CGPoint(x: frame.size.width - 60, y: frame.size.height/11)
+        muteButton.position = CGPoint(x: 60, y: frame.size.height/11)
         muteButton.zPosition = 1000
         addChild(muteButton)
         
@@ -211,7 +211,7 @@ extension ArcadeGameScene {
         let texture =  SKTexture(imageNamed: "pause")
         pauseButton = SKSpriteNode(texture: texture)
         pauseButton.size = CGSize(width: 25, height: 25)
-        pauseButton.position = CGPoint(x: frame.size.width - 60, y: frame.size.height - 60)
+        pauseButton.position = CGPoint(x: frame.size.width - 60, y: frame.size.height/11)
         pauseButton.zPosition = 1000
         addChild(pauseButton)
     }
@@ -347,11 +347,7 @@ extension ArcadeGameScene {
             if self.gameLogic.currentScore - scoreWhenPoweredUp >= 50 {
                 powerDropletTimer?.invalidate()
             }
-            
         }
-        
-        
-        
         
         if (contact.bodyA.categoryBitMask == bitMasks.droplet.rawValue || contact.bodyB.categoryBitMask == bitMasks.droplet.rawValue) && (contact.bodyA.categoryBitMask == bitMasks.monkey.rawValue || contact.bodyB.categoryBitMask == bitMasks.monkey.rawValue)   {
             if(contact.bodyA.categoryBitMask == bitMasks.monkey.rawValue){
@@ -403,7 +399,6 @@ extension ArcadeGameScene {
             //if self.counter == 0 {
             //self.finishGame()
             self.gameOver()
-            
         }
         
         if (contact.bodyA.categoryBitMask == bitMasks.coin.rawValue || contact.bodyB.categoryBitMask == bitMasks.coin.rawValue) && ((contact.bodyA.categoryBitMask == bitMasks.ground.rawValue || contact.bodyB.categoryBitMask == bitMasks.ground.rawValue) || (contact.bodyA.categoryBitMask == bitMasks.banana.rawValue || contact.bodyB.categoryBitMask == bitMasks.banana.rawValue)){
@@ -415,33 +410,30 @@ extension ArcadeGameScene {
             }
         }
         
-        
-        if (contact.bodyA.categoryBitMask == bitMasks.power.rawValue || contact.bodyB.categoryBitMask == bitMasks.power.rawValue) && ((contact.bodyA.categoryBitMask == bitMasks.ground.rawValue || contact.bodyB.categoryBitMask == bitMasks.ground.rawValue) || (contact.bodyA.categoryBitMask == bitMasks.banana.rawValue || contact.bodyB.categoryBitMask == bitMasks.banana.rawValue)){
+        if (contact.bodyA.categoryBitMask == bitMasks.power.rawValue || contact.bodyB.categoryBitMask == bitMasks.power.rawValue) && (contact.bodyA.categoryBitMask == bitMasks.ground.rawValue || contact.bodyB.categoryBitMask == bitMasks.ground.rawValue) {
+            
             if contact.bodyA.categoryBitMask == bitMasks.power.rawValue {
                 contact.bodyA.node?.removeFromParent()
-                
-                if contact.bodyB.categoryBitMask == bitMasks.banana.rawValue {
-                    isPoweredUp = true
-                    scoreWhenPoweredUp = self.gameLogic.currentScore
-                    startSuperShoot()
-                }
-            } else if contact.bodyB.categoryBitMask == bitMasks.power.rawValue {
+            }
+            else {
                 contact.bodyB.node?.removeFromParent()
-                
-                if contact.bodyA.categoryBitMask == bitMasks.banana.rawValue {
-                    isPoweredUp = true
-                    scoreWhenPoweredUp = self.gameLogic.currentScore
-                    startSuperShoot()
+            }
+        }
+                                                                                                                                      
+        if (contact.bodyA.categoryBitMask == bitMasks.power.rawValue || contact.bodyB.categoryBitMask == bitMasks.power.rawValue) && (contact.bodyA.categoryBitMask == bitMasks.banana.rawValue || contact.bodyB.categoryBitMask == bitMasks.banana.rawValue){
+            
+            isPoweredUp = true
+            scoreWhenPoweredUp = self.gameLogic.currentScore
+            startSuperShoot()
+            
+            if contact.bodyA.categoryBitMask == bitMasks.power.rawValue {
+                contact.bodyA.node?.removeFromParent()
+            } 
+            else if contact.bodyB.categoryBitMask == bitMasks.power.rawValue {
+                contact.bodyB.node?.removeFromParent()
                 }
             }
         }
-        
-        
-        
-        
-        
-    }
-    
     
     func didEnd(_ contact: SKPhysicsContact) {
     }
@@ -458,7 +450,7 @@ extension ArcadeGameScene {
                 let touchLocation = touch.location(in: self)
                 
                 //if the user press of the pause button, isPaused become true
-                if (touchLocation.x < frame.size.width  - 47.5 && touchLocation.x > frame.size.width - 72.5 && touchLocation.y < frame.size.height - 47.5  && touchLocation.y > frame.size.height - 72.5) {
+                if (touchLocation.x < frame.size.width  - 47.5 && touchLocation.x > frame.size.width - 72.5 && touchLocation.y > frame.size.height/11 - 12.5  && touchLocation.y < frame.size.height/11 + 12.5) {
                     self.isPaused = true
                     let newTexture = SKTexture(imageNamed: "play")
                     pauseButton.texture = newTexture
@@ -468,7 +460,7 @@ extension ArcadeGameScene {
                     dropletShootTimer?.invalidate()
                     dropletShootTimer?.invalidate()
                 }
-                else if (touchLocation.x < frame.size.width  - 47.5 && touchLocation.x > frame.size.width - 72.5 && touchLocation.y > frame.size.height/11 - 12.5  && touchLocation.y < frame.size.height/11 + 12.5){
+                else if (touchLocation.x > 47.5 && touchLocation.x < 72.5 && touchLocation.y > frame.size.height/11 - 12.5  && touchLocation.y < frame.size.height/11 + 12.5){
                     if isMusicOn {
                         isMusicOn = false
                         let newTexture = SKTexture(imageNamed: "novolume")
@@ -492,7 +484,7 @@ extension ArcadeGameScene {
                 let touchLocation = touch.location(in: self)
                 
                 //if the user press of the pause button, isPaused become true
-                if (touchLocation.x < frame.size.width  - 47.5 && touchLocation.x > frame.size.width - 72.5 && touchLocation.y < frame.size.height - 47.5  && touchLocation.y > frame.size.height - 72.5) {
+                if (touchLocation.x < frame.size.width  - 47.5 && touchLocation.x > frame.size.width - 72.5 && touchLocation.y > frame.size.height/11 - 12.5  && touchLocation.y < frame.size.height/11 + 12.5) {
                     monkeyGenerationTimer.removeAll()
                     let temp = monkeysSpawn
                     monkeysSpawn = 0
@@ -508,7 +500,7 @@ extension ArcadeGameScene {
                         backgroundMusic.run(SKAction.stop())
                     }
                 }
-                else if (touchLocation.x < frame.size.width  - 47.5 && touchLocation.x > frame.size.width - 72.5 && touchLocation.y > frame.size.height/11 - 12.5  && touchLocation.y < frame.size.height/11 + 12.5){
+                else if (touchLocation.x > 47.5 && touchLocation.x < 72.5 && touchLocation.y > frame.size.height/11 - 12.5  && touchLocation.y < frame.size.height/11 + 12.5){
                     if isMusicOn {
                         isMusicOn = false
                         let newTexture = SKTexture(imageNamed: "novolume")
@@ -590,11 +582,7 @@ extension ArcadeGameScene {
             }
            
             isPoweredUp = false
-            
-        
-        
-       
-        
+    
     }
     
     
