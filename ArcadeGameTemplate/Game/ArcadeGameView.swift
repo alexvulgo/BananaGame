@@ -23,7 +23,7 @@ struct ArcadeGameView: View {
      *   for example, and comunicate with the Game Scene.
      **/
     @StateObject var gameLogic: ArcadeGameLogic =  ArcadeGameLogic.shared
-    
+   
     // The game state is used to transition between the different states of the game
     @Binding var currentGameState: GameState
     

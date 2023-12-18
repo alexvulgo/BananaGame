@@ -20,7 +20,6 @@ class ArcadeGameLogic: ObservableObject {
         self.sessionDuration = 0
         self.counter = 3
         self.isGameOver = false
-        
     }
     
     // Keeps track of the current score of the player

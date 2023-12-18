@@ -28,7 +28,14 @@ struct CreditView: View {
                     .fontWeight(.bold)
                     .foregroundColor(.accentColor)
                     .glowBorder(color: Color("mybrown"), lineWidth: 5)
+                
+                Image ("bananosa")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 336, height: 336)
+                    .padding(.top, 50)
             }
+            .statusBar(hidden: true)
         }
     }
 }
