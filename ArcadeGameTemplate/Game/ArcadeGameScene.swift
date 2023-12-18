@@ -43,6 +43,7 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
     var coinSpawnTimer: Timer?
     var powerSpawnTimer: Timer?
     var powerDropletTimer : Timer?
+    //var lifeTimer : Timer?
     // private var resetPower: Timer?
     
     //Counter that keeps track of the iterations
@@ -64,6 +65,7 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
         case coin = 0b100
         case roof = 0b1001
         case power = 0b1000
+       // case life = 0b1011
     }
     
     override func didMove(to view: SKView) {
@@ -684,6 +686,12 @@ extension ArcadeGameScene {
     private func startPowerSpawn() {
         powerSpawnTimer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(createPower), userInfo: nil, repeats: true)
     }
+    
+    
+    
+   
+    
+    
     
     /*private func shoot() {
      let droplet = SKShapeNode(circleOfRadius: 5.0)
