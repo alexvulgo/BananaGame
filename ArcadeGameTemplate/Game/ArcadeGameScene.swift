@@ -17,6 +17,8 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
     
     var player: SKSpriteNode = SKSpriteNode()
     
+    var isPoweredUp: Bool = false
+    
     var cam = SKCameraNode()
     
     var floor = SKSpriteNode(imageNamed: "floor")
@@ -38,6 +40,9 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
     var monkeyGenerationTimer: [Timer] = []
     var dropletShootTimer: Timer?
     var coinSpawnTimer: Timer?
+    var powerSpawnTimer: Timer?
+    var powerDropletTimer : Timer?
+   // private var resetPower: Timer?
     
     //Counter that keeps track of the iterations
     var monkeysSpawn = 0
@@ -52,6 +57,7 @@ class ArcadeGameScene: SKScene, SKPhysicsContactDelegate {
         case droplet = 0b101
         case coin = 0b100
         case roof = 0b1001
+        case power = 0b1000
     }
     
     override func didMove(to view: SKView) {
@@ -107,6 +113,7 @@ extension ArcadeGameScene {
         self.startDropletShoot()
         self.startMonkeyGeneration()
         self.startCoinSpawn()
+        self.startPowerSpawn()
         self.setupLife()
     }
     
@@ -344,7 +351,7 @@ extension ArcadeGameScene {
             }
             self.gameLogic.score(points: 5)
             
-            if(self.gameLogic.currentScore % (200*monkeysSpawn) == 0) {
+            if(self.gameLogic.currentScore % (100*monkeysSpawn) == 0) {
                 startMonkeyGeneration()
                 startDropletShoot()
             }
@@ -352,7 +359,7 @@ extension ArcadeGameScene {
         
         if (contact.bodyA.categoryBitMask == bitMasks.coin.rawValue || contact.bodyB.categoryBitMask == bitMasks.coin.rawValue) && (contact.bodyA.categoryBitMask == bitMasks.banana.rawValue || contact.bodyB.categoryBitMask == bitMasks.banana.rawValue)   {
             self.gameLogic.score(points: 10)
-            if(self.gameLogic.currentScore % (200*monkeysSpawn) == 0) {
+            if(self.gameLogic.currentScore % (100*monkeysSpawn) == 0) {
                 startMonkeyGeneration()
                 startDropletShoot()
             }
@@ -392,6 +399,22 @@ extension ArcadeGameScene {
                 contact.bodyB.node?.removeFromParent()
             }
         }
+        
+        
+        if (contact.bodyA.categoryBitMask == bitMasks.power.rawValue || contact.bodyB.categoryBitMask == bitMasks.power.rawValue) && ((contact.bodyA.categoryBitMask == bitMasks.ground.rawValue || contact.bodyB.categoryBitMask == bitMasks.ground.rawValue) || (contact.bodyA.categoryBitMask == bitMasks.banana.rawValue || contact.bodyB.categoryBitMask == bitMasks.banana.rawValue)){
+            if contact.bodyA.categoryBitMask == bitMasks.power.rawValue {
+                contact.bodyA.node?.removeFromParent()
+                
+                isPoweredUp = true
+                startSuperShoot()
+            }
+            else{
+                contact.bodyB.node?.removeFromParent()
+                isPoweredUp = true
+                startSuperShoot()
+            }
+        }
+  
     }
     
     
@@ -494,15 +517,25 @@ extension ArcadeGameScene {
 //MARK: PLAYER SHOOTING
 extension ArcadeGameScene {
     
+    
+    private func startSuperShoot() {
+        
+        powerDropletTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(shoot), userInfo: nil, repeats: true)
+        
+        isPoweredUp = false
+    }
+    
+    
     private func startDropletShoot() {
         dropletShootTimer?.invalidate()
-        dropletShootTimer = Timer.scheduledTimer(timeInterval: 0.8, target: self, selector: #selector(shoot), userInfo: nil, repeats: true)
+        dropletShootTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(shoot), userInfo: nil, repeats: true)
     }
     
     @objc private func shoot() {
           
             let droplet = SKShapeNode(circleOfRadius: 5.0)
             
+    
             droplet.position = CGPoint(x: player.position.x, y: player.position.y + (player.size.height / 2) + 1)
         
             droplet.fillColor = SKColor.white
@@ -560,6 +593,37 @@ extension ArcadeGameScene {
         let endlessLeftAndRight = SKAction.repeatForever(goLeftAndRight)
         
         coin.run(endlessLeftAndRight)
+    }
+    
+    
+    @objc private func createPower() {
+        let power = SKSpriteNode(imageNamed: "banana222")
+        power.name = "coin"
+        
+        power.size = CGSize(width: 32, height: 32)
+        power.position = CGPoint(x: CGFloat.random(in: frame.minX+self.player.size.width..<frame.maxX-self.player.size.width), y: frame.height+1)
+        power.zPosition = 1000
+        power.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: power.texture!.size().width, height: 32))
+        power.physicsBody?.affectedByGravity = true
+        power.physicsBody?.isDynamic = true
+        power.physicsBody?.allowsRotation = false
+        power.physicsBody?.categoryBitMask = bitMasks.power.rawValue
+        power.physicsBody?.collisionBitMask = 0
+        power.physicsBody?.contactTestBitMask = (bitMasks.ground.rawValue | bitMasks.banana.rawValue)
+        power.physicsBody?.linearDamping = CGFloat.random(in: 5..<10)
+        
+        addChild(power)
+        
+        let goLeft = SKAction.moveBy(x: -10, y: 0, duration: 0.5)
+        let goRight = SKAction.moveBy(x: 10, y: 0, duration: 0.5)
+        let goLeftAndRight = SKAction.sequence([goLeft,goRight])
+        let endlessLeftAndRight = SKAction.repeatForever(goLeftAndRight)
+        
+        power.run(endlessLeftAndRight)
+    }
+    
+    private func startPowerSpawn() {
+        powerSpawnTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(createPower), userInfo: nil, repeats: true)
     }
     
     /*private func shoot() {
