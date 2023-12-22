@@ -345,7 +345,6 @@ extension ArcadeGameScene {
             
             if(self.gameLogic.currentScore % (100*monkeysSpawn) == 0) {
                 startMonkeyGeneration()
-               // startDropletShoot()
             }
         }
         
@@ -353,7 +352,6 @@ extension ArcadeGameScene {
             self.gameLogic.score(points: 10)
             if(self.gameLogic.currentScore % (100*monkeysSpawn) == 0) {
                 startMonkeyGeneration()
-                //startDropletShoot()
             }
         }
         
@@ -376,9 +374,6 @@ extension ArcadeGameScene {
                 self.monkeyDieAnimation(monkey: contact.bodyB.node! as! SKSpriteNode)
             }
             
-            //self.gameLogic.decrementCounter()
-            //if self.counter == 0 {
-            //self.finishGame()
             self.gameOver()
         }
         
@@ -418,6 +413,7 @@ extension ArcadeGameScene {
     
     func didEnd(_ contact: SKPhysicsContact) {
     }
+
 }
 
 // MARK: - Handle Player Inputs
@@ -432,28 +428,10 @@ extension ArcadeGameScene {
                 
                 //if the user press of the pause button, isPaused become true
                 if (touchLocation.x < frame.size.width  - 47.5 && touchLocation.x > frame.size.width - 72.5 && touchLocation.y > frame.size.height/11 - 12.5  && touchLocation.y < frame.size.height/11 + 12.5) {
-                    self.isPaused = true
-                    let newTexture = SKTexture(imageNamed: "play")
-                    pauseButton.texture = newTexture
-                    for timer in monkeyGenerationTimer {
-                        timer.invalidate()
-                    }
-                    dropletShootTimer?.invalidate()
-                    dropletShootTimer?.invalidate()
+                   gamePause()
                 }
                 else if (touchLocation.x > 47.5 && touchLocation.x < 72.5 && touchLocation.y > frame.size.height/11 - 12.5  && touchLocation.y < frame.size.height/11 + 12.5){
-                    if isMusicOn {
-                        isMusicOn = false
-                        let newTexture = SKTexture(imageNamed: "novolume")
-                        muteButton.texture = newTexture
-                        backgroundMusic.run(SKAction.stop())
-                    }
-                    else {
-                        isMusicOn = true
-                        let newTexture = SKTexture(imageNamed: "volume")
-                        muteButton.texture = newTexture
-                        backgroundMusic.run(SKAction.play())
-                    }
+                    musicToggle()
                 }
                 else {
                     player.position.x = touchLocation.x
@@ -466,34 +444,10 @@ extension ArcadeGameScene {
                 
                 //if the user press of the pause button, isPaused become true
                 if (touchLocation.x < frame.size.width  - 47.5 && touchLocation.x > frame.size.width - 72.5 && touchLocation.y > frame.size.height/11 - 12.5  && touchLocation.y < frame.size.height/11 + 12.5) {
-                    monkeyGenerationTimer.removeAll()
-                    let temp = monkeysSpawn
-                    monkeysSpawn = 0
-                    for _ in 0..<temp {
-                        startMonkeyGeneration()
-                    }
-                    startDropletShoot()
-                    self.isPaused = false
-                    let newTexture = SKTexture(imageNamed: "pause")
-                    pauseButton.texture = newTexture
-                    
-                    if !isMusicOn{
-                        backgroundMusic.run(SKAction.stop())
-                    }
+                    gameResume()
                 }
                 else if (touchLocation.x > 47.5 && touchLocation.x < 72.5 && touchLocation.y > frame.size.height/11 - 12.5  && touchLocation.y < frame.size.height/11 + 12.5){
-                    if isMusicOn {
-                        isMusicOn = false
-                        let newTexture = SKTexture(imageNamed: "novolume")
-                        muteButton.texture = newTexture
-                        backgroundMusic.run(SKAction.stop())
-                    }
-                    else {
-                        isMusicOn = true
-                        let newTexture = SKTexture(imageNamed: "volume")
-                        muteButton.texture = newTexture
-                        backgroundMusic.run(SKAction.play())
-                    }
+                    musicToggle()
                 }
             }
         }
@@ -517,6 +471,54 @@ extension ArcadeGameScene {
             self.isMovingToTheLeft = false
         }
     }
+    
+    func gamePause() {
+        self.isPaused = true
+        let newTexture = SKTexture(imageNamed: "play")
+        pauseButton.texture = newTexture
+        for timer in monkeyGenerationTimer {
+            timer.invalidate()
+        }
+        dropletShootTimer?.invalidate()
+        dropletShootTimer?.invalidate()
+        powerSpawnTimer?.invalidate()
+        coinSpawnTimer?.invalidate()
+    }
+    
+    func gameResume() {
+        monkeyGenerationTimer.removeAll()
+        let temp = monkeysSpawn
+        monkeysSpawn = 0
+        for _ in 0..<temp {
+            startMonkeyGeneration()
+        }
+        startDropletShoot()
+        startCoinSpawn()
+        startPowerSpawn()
+        self.isPaused = false
+        let newTexture = SKTexture(imageNamed: "pause")
+        pauseButton.texture = newTexture
+        
+        if !isMusicOn{
+            backgroundMusic.run(SKAction.stop())
+        }
+    }
+    
+    func musicToggle() {
+        if isMusicOn {
+            isMusicOn = false
+            let newTexture = SKTexture(imageNamed: "novolume")
+            muteButton.texture = newTexture
+            backgroundMusic.run(SKAction.stop())
+        }
+        else {
+            isMusicOn = true
+            let newTexture = SKTexture(imageNamed: "volume")
+            muteButton.texture = newTexture
+            backgroundMusic.run(SKAction.play())
+        }
+    }
+    
 }
 
 // MARK: - Player Movement
@@ -557,13 +559,13 @@ extension ArcadeGameScene {
     
     private func startSuperShoot() {
         if(isPoweredUp) {
-          
-                powerDropletTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(shoot), userInfo: nil, repeats: true)
-               
-            }
-           
-            isPoweredUp = false
-    
+            
+            powerDropletTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(shoot), userInfo: nil, repeats: true)
+            
+        }
+        
+        isPoweredUp = false
+        
     }
     
     
@@ -627,15 +629,17 @@ extension ArcadeGameScene {
         coin.run(endlessLeftAndRight)
     }
     
+    private func startPowerSpawn() {
+        powerSpawnTimer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(createPower), userInfo: nil, repeats: true)
+    }
     
     @objc private func createPower() {
         let power = SKSpriteNode(imageNamed: "bananaPower")
-        power.name = "coin"
         
         power.size = CGSize(width: 32, height: 32)
         power.position = CGPoint(x: CGFloat.random(in: frame.minX+self.player.size.width..<frame.maxX-self.player.size.width), y: frame.height+1)
         power.zPosition = 1000
-        power.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: power.texture!.size().width, height: 32))
+        power.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 16, height: 16))
         power.physicsBody?.affectedByGravity = true
         power.physicsBody?.isDynamic = true
         power.physicsBody?.allowsRotation = false
@@ -654,34 +658,7 @@ extension ArcadeGameScene {
         power.run(endlessLeftAndRight)
     }
     
-    private func startPowerSpawn() {
-        powerSpawnTimer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(createPower), userInfo: nil, repeats: true)
-    }
-    
-    
-    
-   
-    
-    
-    
-    /*private func shoot() {
-     let droplet = SKShapeNode(circleOfRadius: 5.0)
-     droplet.zPosition = 1
-     droplet.position = CGPoint(x: player.position.x, y: player.position.y + (player.size.height / 2) + 1)
-     droplet.fillColor = SKColor.white
-     
-     droplet.physicsBody = SKPhysicsBody(circleOfRadius: 5.0)
-     droplet.physicsBody?.isDynamic = true
-     droplet.physicsBody?.affectedByGravity = false
-     droplet.physicsBody?.categoryBitMask = bitMasks.droplet.rawValue
-     
-     self.addChild(droplet)
-     
-     droplet.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 2))
-     }*/
-    
 }
-
 
 // MARK: - Game Over Condition
 extension ArcadeGameScene {
